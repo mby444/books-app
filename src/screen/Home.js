@@ -1,11 +1,13 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import Navbar from "../components/Navbar";
 import NavFooter from "../components/NavFooter";
 
-export default function Home({ route, navigation }) {
+export default function Home() {
     return (
         <View style={styles.container}>
             <Navbar />
+            <ScrollView>
+            </ScrollView>
             <NavFooter />
         </View>
     );
