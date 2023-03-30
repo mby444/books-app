@@ -1,26 +1,26 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { getApiKey } from "../utils/config";
 
 const useSearchBooks = (initialBooks=[]) => {
-    const apiKey = "AIzaSyB6B_-JSgw5WAq7AirAC_jZ8Gdd39fyfu8";
+    const apiKey = getApiKey();
     const [searchedBooks, setSearchedBooks] = useState([]);
-    const completedBooks = useRef(searchedBooks);
+    const [completedBooks, setCompletedBooks] = useState(searchedBooks);
 
     useEffect(() => {
         setSearchedBooks([]);
-        completedBooks.current = initialBooks;
+        setCompletedBooks(initialBooks);
     }, []);
 
     useEffect(() => {
-        completedBooks.current = filterBooks(searchedBooks);
+        setCompletedBooks(filterBooks(searchedBooks));
     }, [searchedBooks]);
 
     const filterBooks = (values=[]) => {
         return values.filter((value) => {
             const hasThumbnail = !!(value?.volumeInfo?.imageLinks?.smallThumbnail && value?.volumeInfo?.imageLinks?.thumbnail);
             const hasAuthors = Array.isArray(value?.volumeInfo?.authors);
-            // const hasRating = !!value?.volumeInfo?.averageRating;
             const hasPrice = !!value?.saleInfo?.saleability;
-            const isCompleted = hasThumbnail && hasAuthors && /* hasRating && */ hasPrice;
+            const isCompleted = hasThumbnail && hasAuthors && hasPrice;
             return isCompleted;
         });
     };
@@ -41,7 +41,7 @@ const useSearchBooks = (initialBooks=[]) => {
 
     return {
         searchedBooks,
-        completedBooks: completedBooks.current,
+        completedBooks,
         searchBooks
     };
 };

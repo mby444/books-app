@@ -1,26 +1,34 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, Keyboard, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useEffect, useState } from "react";
 import homeIcon from "../../assets/images/home-icon.png";
 import searchIcon from "../../assets/images/search-icon.png";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
-export default function NavFooter() {
+export default function NavFooter({ position=0, visible=true }) {
     const navigation = useNavigation();
+    const defaultTouchableColor = "#0000";
+    const activeTouchableColor = "#2A6084";
+    const displayStyle = visible ? "flex" : "none";
+    const touchableColors = Array(2).fill(defaultTouchableColor);
+    touchableColors[position] = activeTouchableColor;
 
-    const navigate = (target="Home", params={}) => {
+    const navigate = (target="Home") => {
         navigation.navigate(target);
     };
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { display: displayStyle }]}>
             <View style={styles.touchableIconContainer}>
                 <TouchableOpacity
-                    onPress={() => {navigate("Home")}}
+                    style={[styles.touchableIcon, { backgroundColor: touchableColors[0] }]}
+                    onPress={() => navigate("Home")}
                 >
                     <Image style={styles.icon} source={homeIcon} />
                 </TouchableOpacity>
             </View>
             <View style={styles.touchableIconContainer}>
                 <TouchableOpacity
+                    style={[styles.touchableIcon, { backgroundColor: touchableColors[1] }]}
                     onPress={() => navigate("Search")}
                 >
                     <Image style={styles.icon} source={searchIcon} />
@@ -47,8 +55,15 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         width: "50%"
     },
+    touchableIcon: {
+        width: 60,
+        height: 50,
+        borderRadius: 12,
+        alignItems: "center",
+        justifyContent: "center"
+    },
     icon: {
-        width: 40,
-        height: 40
+        width: 36,
+        height: 36
     }
 });

@@ -3,12 +3,13 @@ import Navbar from "../components/Navbar";
 import NavFooter from "../components/NavFooter";
 
 export default function Home() {
+
     return (
         <View style={styles.container}>
             <Navbar />
             <ScrollView>
             </ScrollView>
-            <NavFooter />
+            <NavFooter position={0} />
         </View>
     );
 }

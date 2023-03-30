@@ -4,6 +4,12 @@ import starIcon from "../../assets/images/star-icon.png";
 const screenWidth = Dimensions.get("window").width;
 
 export default function BooksSearch({ data={} }) {
+
+    const getThumbnailUrl = (data={}) => {
+        const value = data?.volumeInfo?.imageLinks?.thumbnail;
+        return value;
+    };
+
     const getTitle = (data={}) => {
         const value = data?.volumeInfo?.title;
         return value;
@@ -11,7 +17,7 @@ export default function BooksSearch({ data={} }) {
 
     const getAuthor = (data={}) => {
         const values = data?.volumeInfo?.authors;
-        const duoAuthors = values.join("and");
+        const duoAuthors = values.join(" and ");
         const multiAuthors = values.join(", ");
         const author = values?.length > 1 ? values?.length > 2 ? multiAuthors :
         duoAuthors : values[0];
@@ -35,11 +41,13 @@ export default function BooksSearch({ data={} }) {
     };
 
     const [
+        thumbnailUrl,
         title,
         author,
         rating,
         priceText
     ] = [
+        getThumbnailUrl(data),
         getTitle(data),
         getAuthor(data),
         getAverageRating(data),
@@ -49,11 +57,11 @@ export default function BooksSearch({ data={} }) {
     return (
         <TouchableOpacity style={styles.container}>
             <View style={styles.thumbnailContainer}>
-                <Image style={styles.thumbnailImage} source={require("../../assets/images/book-example.jpg")} />
+                <Image style={styles.thumbnailImage} source={{ uri: thumbnailUrl }} />
             </View>
             <View style={styles.infoContainer}>
                 <View style={styles.rowText}>
-                    <Text style={[styles.bookTitle, { flexWrap: "wrap", flex: 1 }]}>{title}</Text>
+                    <Text style={styles.bookTitle}>{title}</Text>
                 </View>
                 <View style={styles.rowText}>
                     <Text style={styles.bookAuthor}>{author}</Text>
@@ -95,7 +103,9 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 600,
         color: "#000",
-        paddingBottom: 4
+        paddingBottom: 4,
+        flexWrap: "wrap",
+        flex: 1
     },
     bookAuthor: {
         fontSize: 16,
