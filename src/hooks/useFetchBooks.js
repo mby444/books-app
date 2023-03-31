@@ -1,7 +1,5 @@
 import { useState } from "react";
 
-const useFetchBooks = () => {
-
-};
+const useFetchBooks = () => {};
 
 export default useFetchBooks;
