@@ -1,20 +1,31 @@
 import { useEffect, useState } from "react";
+import useStorage from "./useStorage";
+import { getStorageData, setStorageData } from "../utils/storage";
 import { getApiKey } from "../utils/config";
 
-const useSearchBooks = (initialBooks = []) => {
+const useSearchBooks = () => {
+  const searchedBooksKey = "@searched_books";
   const apiKey = getApiKey();
   const [searchedBooks, setSearchedBooks] = useState([]);
-  const [completedBooks, setCompletedBooks] = useState(searchedBooks);
+  const [completedBooks, setCompletedBooks] = useState([]);
   const [booksError, setBooksError] = useState(false);
+  const [booksReady, setBooksReady] = useState(false);
 
   useEffect(() => {
-    setSearchedBooks([]);
-    setCompletedBooks(initialBooks);
+    (async () => {
+      const rawPastSearchedBooks = await getStorageData(searchedBooksKey);
+      const pastSearchedBooks = JSON.parse(rawPastSearchedBooks || "[]");
+      setSearchedBooks(pastSearchedBooks);
+      // completeBooks();
+      setCompletedBooks(filterBooks(searchedBooks));
+      setBooksReady(true);
+      // console.log(pastSearchedBooks[0]?.data?.volumeInfo?.title);
+    })();
   }, []);
 
-  useEffect(() => {
+  const completeBooks = () => {
     setCompletedBooks(filterBooks(searchedBooks));
-  }, [searchedBooks]);
+  };
 
   const filterBooks = (values = []) => {
     return values.filter((value) => {
@@ -30,6 +41,7 @@ const useSearchBooks = (initialBooks = []) => {
   };
 
   const searchBooks = (searchQuery, searchOptions = {}) => {
+    setBooksReady(false);
     fetch(
       `https://www.googleapis.com/books/v1/volumes?q=${searchQuery}&key=${apiKey}`
     )
@@ -39,20 +51,31 @@ const useSearchBooks = (initialBooks = []) => {
         if (!items?.length) throw new Error();
         setBooksError(false);
         setSearchedBooks(items);
+        // completeBooks();
+        setCompletedBooks(filterBooks(searchedBooks));
       })
       .catch((err) => {
         setBooksError(true);
         setSearchedBooks([]);
+        // completeBooks();
+        setCompletedBooks(filterBooks(searchedBooks));
+      })
+      .finally(() => {
+        setBooksReady(true);
       });
   };
 
   const resetSearchBooks = () => {
     setSearchedBooks([]);
+    // completeBooks();
+    setCompletedBooks(filterBooks(searchedBooks));
     setBooksError(false);
+    setBooksReady(true);
   };
 
   return {
     booksError,
+    booksReady,
     searchedBooks,
     completedBooks,
     searchBooks,

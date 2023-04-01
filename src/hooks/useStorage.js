@@ -16,6 +16,7 @@ const useStorage = (key) => {
   }, []);
 
   const output = {
+    key,
     value: storage,
     set(value) {
       setStorageData(key, value).then(() => setStorage(value));

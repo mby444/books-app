@@ -65,13 +65,15 @@ function DynamicBooksContainer({ books, isLoading, isNotFoundError }) {
 }
 
 export default function Search() {
-  const { booksError, completedBooks, searchBooks } = useSearchBooks();
+  const { booksError, booksReady, completedBooks, searchBooks } = useSearchBooks();
   const [navFooterVisible, setNavFooterVisible] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  console.log(booksError, booksReady, completedBooks[0]?.volumeInfo?.title);
 
   useEffect(() => {
-    setIsLoading(false);
-  }, [completedBooks]);
+    setIsLoading(!booksReady);
+  }, [booksReady]);
 
   const handleSearch = (value) => {
     setIsLoading(true);
