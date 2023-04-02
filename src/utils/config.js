@@ -1,13 +1,18 @@
-import data from "../../config/api-key.json";
+import apiKey from "../../config/api-key.json";
+import bookshelves from "../../config/bookshelves.json";
 
-const getApiKey = () => {
-  try {
-    const { apiKey } = data;
-    return apiKey;
-  } catch (err) {
-    console.log(err);
-    return null;
-  }
+export const getApiKey = () => {
+  return apiKey.apiKey;
 };
 
-export { getApiKey };
+export const getBookShelves = () => {
+  return {
+    userId: bookshelves.userId,
+    shelfId: bookshelves.shelfId,
+  };
+};
+
+export default {
+  getApiKey,
+  getBookShelves,
+};
