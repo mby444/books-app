@@ -17,7 +17,7 @@ const screenHeight = Dimensions.get("window").height;
 function Empty() {
   return (
     <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>No result yet.</Text>
+      <Text style={styles.emptyText}>No results yet.</Text>
     </View>
   );
 }
@@ -65,11 +65,10 @@ function DynamicBooksContainer({ books, isLoading, isNotFoundError }) {
 }
 
 export default function Search() {
-  const { booksError, booksReady, completedBooks, searchBooks } = useSearchBooks();
+  const { booksError, booksReady, completedBooks, searchBooks, clearBooks } =
+    useSearchBooks();
   const [navFooterVisible, setNavFooterVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
-
-  console.log(booksError, booksReady, completedBooks[0]?.volumeInfo?.title);
 
   useEffect(() => {
     setIsLoading(!booksReady);
@@ -80,10 +79,15 @@ export default function Search() {
     searchBooks(value);
   };
 
+  const handleEmptySearch = () => {
+    clearBooks();
+  };
+
   return (
     <View style={styles.container}>
       <NavbarSearch
         onSearch={handleSearch}
+        onEmptyText={handleEmptySearch}
         onFocus={() => setNavFooterVisible(false)}
         onBlur={() => setNavFooterVisible(true)}
       />

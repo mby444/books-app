@@ -86,7 +86,10 @@ export default function BooksSearch({ data = {} }) {
   return (
     <TouchableOpacity style={styles.container}>
       <View style={styles.thumbnailContainer}>
-        <Image style={[styles.thumbnailImage, { width: 100, height: 153.91 }]} source={{ uri: thumbnailUrl }} />
+        <Image
+          style={[styles.thumbnailImage, { width: 100, height: 153.91 }]}
+          source={{ uri: thumbnailUrl }}
+        />
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.rowText}>

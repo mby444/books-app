@@ -18,15 +18,16 @@ function SearchButton({
   onSearch = Function(),
   onPress = Function(),
 }) {
+  const handlePress = () => {
+    if (String(text).trim()) {
+      onPress();
+      onSearch(text);
+    }
+    Keyboard.dismiss();
+  };
+
   return (
-    <Pressable
-      style={styles.searchButton}
-      onPress={() => {
-        onPress();
-        onSearch(text);
-        Keyboard.dismiss();
-      }}
-    >
+    <Pressable style={styles.searchButton} onPress={handlePress}>
       <Image style={styles.searchIcon} source={searchIcon} />
     </Pressable>
   );
@@ -36,6 +37,7 @@ export default function NavbarSearch({
   onSearch = Function(),
   onFocus = Function(),
   onBlur = Function(),
+  onEmptyText = Function(),
 }) {
   const inputStorage = useStorage("@search_text");
   const [input, setInput] = useState("");
@@ -46,13 +48,18 @@ export default function NavbarSearch({
     setInput(inputStorage.value);
   }, [inputStorage.value]);
 
+  const handleChangeText = (text) => {
+    setInput(text);
+    if (!String(text).trim()) onEmptyText();
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.searchInput}
           value={input}
-          onChangeText={(text) => setInput(text)}
+          onChangeText={handleChangeText}
           onFocus={() => onFocus()}
           onBlur={() => onBlur()}
           placeholder="Search books..."
