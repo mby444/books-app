@@ -93,9 +93,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.mby444.calculator"
+    namespace "com.mby444.books"
     defaultConfig {
-        applicationId "com.mby444.calculator"
+        applicationId "com.mby444.books"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

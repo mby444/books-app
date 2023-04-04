@@ -449,7 +449,11 @@
 					"-lc++",
 					"$(inherited)",
 				);
+<<<<<<< HEAD
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mby444.calculator";
+=======
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mby444.books";
+>>>>>>> rename
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Books.app/Books";
 			};
@@ -473,7 +477,11 @@
 					"-lc++",
 					"$(inherited)",
 				);
+<<<<<<< HEAD
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mby444.calculator";
+=======
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mby444.books";
+>>>>>>> rename
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Books.app/Books";
 			};
@@ -499,7 +507,11 @@
 					"-ObjC",
 					"-lc++",
 				);
+<<<<<<< HEAD
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mby444.calculator";
+=======
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mby444.books";
+>>>>>>> rename
 				PRODUCT_NAME = "Books";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -526,7 +538,11 @@
 					"-ObjC",
 					"-lc++",
 				);
+<<<<<<< HEAD
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mby444.calculator";
+=======
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mby444.books";
+>>>>>>> rename
 				PRODUCT_NAME = "Books";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
