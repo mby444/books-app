@@ -27,8 +27,8 @@ function BooksRow({ books = [] }) {
   return (
     <View style={styles.booksRow}>
       <View style={styles.booksSubRow}>
-        {books.map((book) => (
-          <BooksHome data={book} />
+        {books.map((book, i) => (
+          <BooksHome data={book} key={i} />
         ))}
       </View>
     </View>
