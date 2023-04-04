@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+// import thumbnailImage from "../../assets/images/book-example.jpg";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -17,15 +18,11 @@ export default function BooksSearch({ data = {} }) {
 
   const getTitle = (data = {}) => {
     const value = data?.volumeInfo?.title;
-    const maxLength = 50;
-    const additionalValue = value.length > maxLength ? "..." : "";
-    const limitedValue = value.substr(0, maxLength) + additionalValue;
-    return limitedValue;
+    return value
   };
 
   const getAuthor = (data = {}) => {
     const values = data?.volumeInfo?.authors;
-    const maxLength = 64;
     const duoAuthors = values.join(" and ");
     const multiAuthors = values.join(", ");
     const author =
@@ -34,9 +31,7 @@ export default function BooksSearch({ data = {} }) {
           ? multiAuthors
           : duoAuthors
         : values[0];
-    const additionalValue = author.length > maxLength ? "..." : "";
-    const limitedAuthor = author.substr(0, maxLength) + additionalValue;
-    return limitedAuthor;
+    return author;
   };
 
   const getPublishedDate = (data = {}) => {
@@ -93,16 +88,16 @@ export default function BooksSearch({ data = {} }) {
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.rowText}>
-          <Text style={styles.bookTitle}>{title}</Text>
+          <Text style={styles.bookTitle} numberOfLines={2}>{title}</Text>
         </View>
         <View style={styles.rowText}>
-          <Text style={styles.bookAuthor}>{author}</Text>
+          <Text style={styles.bookAuthor} numberOfLines={2}>{author}</Text>
         </View>
         <View style={styles.rowText}>
-          <Text style={styles.publisedDateText}>{publishedDate}</Text>
+          <Text style={styles.publisedDateText} numberOfLines={1}>{publishedDate}</Text>
         </View>
         <View style={styles.rowText}>
-          <Text style={styles.price}>{priceText}</Text>
+          <Text style={styles.price} numberOfLines={1}>{priceText}</Text>
         </View>
       </View>
     </TouchableOpacity>

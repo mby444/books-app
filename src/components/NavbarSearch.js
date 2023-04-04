@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { useEffect, useState } from "react";
+import { setStorageData } from "../utils/storage";
 import useStorage from "../hooks/useStorage";
 import searchIcon from "../../assets/images/search-icon.png";
 
@@ -53,13 +54,28 @@ export default function NavbarSearch({
     if (!String(text).trim()) onEmptyText();
   };
 
+  const handleSearch = (text = "") => {
+    if (!text.trim()) return;
+    onSearch(text);
+  };
+
+  const postInput = (text="") => setStorageData(inputStorage.key, text);
+  const storeInput = () => inputStorage.set(input);
+
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.searchInput}
           value={input}
-          onChangeText={handleChangeText}
+          onChangeText={(text) => {
+            postInput(text);
+            handleChangeText(text);
+          }}
+          onSubmitEditing={() => {
+            storeInput();
+            handleSearch(input);
+          }}
           onFocus={() => onFocus()}
           onBlur={() => onBlur()}
           placeholder="Search books..."
@@ -67,10 +83,7 @@ export default function NavbarSearch({
         />
         <SearchButton
           text={input}
-          onSearch={onSearch}
-          onPress={() => {
-            inputStorage.set(input);
-          }}
+          onSearch={handleSearch}
         />
       </View>
     </View>
