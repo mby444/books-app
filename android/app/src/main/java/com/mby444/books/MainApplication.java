@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:android/app/src/main/java/com/mby444/calculator/MainApplication.java
-package com.mby444.calculator;
-========
 package com.mby444.books;
->>>>>>>> rename:android/app/src/main/java/com/mby444/books/MainApplication.java
 
 import android.app.Application;
 import com.facebook.react.PackageList;

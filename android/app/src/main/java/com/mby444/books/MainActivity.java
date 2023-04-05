@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:android/app/src/main/java/com/mby444/calculator/MainActivity.java
-package com.mby444.calculator;
-========
 package com.mby444.books;
->>>>>>>> rename:android/app/src/main/java/com/mby444/books/MainActivity.java
 
 import android.os.Bundle;
 import com.facebook.react.ReactActivity;
