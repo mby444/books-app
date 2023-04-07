@@ -7,8 +7,16 @@ import {
   Text,
   View,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 export default function BooksHome({ data = {} }) {
+  const navigation = useNavigation();
+
+  const getBookId = (data = {}) => {
+    const bookId = data?.id;
+    return bookId;
+  };
+
   const getThumbnailUrl = (data = {}) => {
     const value = data?.volumeInfo?.imageLinks?.thumbnail;
     return value;
@@ -43,13 +51,20 @@ export default function BooksHome({ data = {} }) {
     const formattedPrice = formatPriceText(retailPrice);
     const currencyCode = saleInfo?.retailPrice?.currencyCode;
     const countryPrice = `${currencyCode} ${formattedPrice}`;
-    const priceText =
-      sale === "FOR_SALE"
-        ? countryPrice
-        : sale === "FREE"
-        ? "FREE"
-        : "UNAVAILABLE";
+    const isForSale = parseInt(retailPrice) > 0 && sale === "FOR_SALE";
+    const isFree = parseInt(retailPrice) === 0 || sale === "FREE";
+    const priceText = isForSale
+      ? countryPrice
+      : isFree
+      ? "FREE"
+      : "UNAVAILABLE";
     return priceText;
+  };
+
+  const handleBookPress = () => {
+    const bookId = getBookId(data);
+    const params = { bookId };
+    navigation.navigate("Book", params);
   };
 
   const [thumbnailUrl, title, priceText] = [
@@ -59,13 +74,17 @@ export default function BooksHome({ data = {} }) {
   ];
 
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={handleBookPress}>
       <View style={styles.thumbnailContainer}>
         <Image style={styles.thumbnail} source={{ uri: thumbnailUrl }} />
       </View>
       <View style={styles.textContainer}>
-        <Text style={styles.bookTitle} numberOfLines={2}>{title}</Text>
-        <Text style={styles.price} numberOfLines={1}>{priceText}</Text>
+        <Text style={styles.bookTitle} numberOfLines={2}>
+          {title}
+        </Text>
+        <Text style={styles.price} numberOfLines={1}>
+          {priceText}
+        </Text>
       </View>
     </TouchableOpacity>
   );

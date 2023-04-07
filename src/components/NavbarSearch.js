@@ -59,7 +59,7 @@ export default function NavbarSearch({
     onSearch(text);
   };
 
-  const postInput = (text="") => setStorageData(inputStorage.key, text);
+  const postInput = (text = "") => setStorageData(inputStorage.key, text);
   const storeInput = () => inputStorage.set(input);
 
   return (
@@ -81,10 +81,7 @@ export default function NavbarSearch({
           placeholder="Search books..."
           placeholderTextColor="#efefef"
         />
-        <SearchButton
-          text={input}
-          onSearch={handleSearch}
-        />
+        <SearchButton text={input} onSearch={handleSearch} />
       </View>
     </View>
   );

@@ -66,11 +66,7 @@ function DynamicBooksContainer({ isReady = false }) {
   const { books } = useContext(BooksContext);
   const rowsCount = Math.ceil(books.length / 3);
 
-  return !isReady ? (
-    <Loader />
-  ) : (
-    <BooksRowContainer rowsCount={rowsCount} />
-  );
+  return !isReady ? <Loader /> : <BooksRowContainer rowsCount={rowsCount} />;
 }
 
 export default function Home() {

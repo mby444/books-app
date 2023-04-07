@@ -6,11 +6,19 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 // import thumbnailImage from "../../assets/images/book-example.jpg";
 
 const screenWidth = Dimensions.get("window").width;
 
 export default function BooksSearch({ data = {} }) {
+  const navigation = useNavigation();
+
+  const getBookId = (data = {}) => {
+    const bookId = data?.id;
+    return bookId;
+  };
+
   const getThumbnailUrl = (data = {}) => {
     const value = data?.volumeInfo?.imageLinks?.thumbnail;
     return value;
@@ -18,7 +26,7 @@ export default function BooksSearch({ data = {} }) {
 
   const getTitle = (data = {}) => {
     const value = data?.volumeInfo?.title;
-    return value
+    return value;
   };
 
   const getAuthor = (data = {}) => {
@@ -61,13 +69,20 @@ export default function BooksSearch({ data = {} }) {
     const formattedPrice = formatPriceText(retailPrice);
     const currencyCode = saleInfo?.retailPrice?.currencyCode;
     const countryPrice = `${currencyCode} ${formattedPrice}`;
-    const priceText =
-      sale === "FOR_SALE"
-        ? countryPrice
-        : sale === "FREE"
-        ? "FREE"
-        : "UNAVAILABLE";
+    const isForSale = parseInt(retailPrice) > 0 && sale === "FOR_SALE";
+    const isFree = parseInt(retailPrice) === 0 || sale === "FREE";
+    const priceText = isForSale
+      ? countryPrice
+      : isFree
+      ? "FREE"
+      : "UNAVAILABLE";
     return priceText;
+  };
+
+  const handleBookPress = () => {
+    const bookId = getBookId(data);
+    const params = { bookId };
+    navigation.navigate("Book", params);
   };
 
   const [thumbnailUrl, title, author, publishedDate, priceText] = [
@@ -79,7 +94,7 @@ export default function BooksSearch({ data = {} }) {
   ];
 
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={handleBookPress}>
       <View style={styles.thumbnailContainer}>
         <Image
           style={[styles.thumbnailImage, { width: 100, height: 153.91 }]}
@@ -88,16 +103,24 @@ export default function BooksSearch({ data = {} }) {
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.rowText}>
-          <Text style={styles.bookTitle} numberOfLines={2}>{title}</Text>
+          <Text style={styles.bookTitle} numberOfLines={2}>
+            {title}
+          </Text>
         </View>
         <View style={styles.rowText}>
-          <Text style={styles.bookAuthor} numberOfLines={2}>{author}</Text>
+          <Text style={styles.bookAuthor} numberOfLines={2}>
+            {author}
+          </Text>
         </View>
         <View style={styles.rowText}>
-          <Text style={styles.publisedDateText} numberOfLines={1}>{publishedDate}</Text>
+          <Text style={styles.publisedDateText} numberOfLines={1}>
+            {publishedDate}
+          </Text>
         </View>
         <View style={styles.rowText}>
-          <Text style={styles.price} numberOfLines={1}>{priceText}</Text>
+          <Text style={styles.price} numberOfLines={1}>
+            {priceText}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
