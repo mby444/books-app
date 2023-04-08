@@ -1,27 +1,15 @@
 import {
-  ActivityIndicator,
-  Dimensions,
   ScrollView,
   StyleSheet,
   View,
 } from "react-native";
-import { createContext, useContext } from "react";
+import { useContext } from "react";
+import useHomeBooks from "../hooks/useHomeBooks";
+import { BooksListContext } from "../context";
+import Loader from "../components/Loader";
 import Navbar from "../components/Navbar";
 import NavFooter from "../components/NavFooter";
 import BooksHome from "../components/BooksHome";
-import useHomeBooks from "../hooks/useHomeBooks";
-
-const screenHeight = Dimensions.get("window").height;
-
-const BooksContext = createContext([]);
-
-function Loader() {
-  return (
-    <View style={styles.loaderContainer}>
-      <ActivityIndicator style={styles.loader} size="large" />
-    </View>
-  );
-}
 
 function BooksRow({ books = [] }) {
   return (
@@ -36,7 +24,7 @@ function BooksRow({ books = [] }) {
 }
 
 function BooksRowContainer({ rowsCount = 0 }) {
-  const { books } = useContext(BooksContext);
+  const { books } = useContext(BooksListContext);
   const getBooksRows = () => {
     const output = [];
     Array(rowsCount)
@@ -63,7 +51,7 @@ function BooksRowContainer({ rowsCount = 0 }) {
 }
 
 function DynamicBooksContainer({ isReady = false }) {
-  const { books } = useContext(BooksContext);
+  const { books } = useContext(BooksListContext);
   const rowsCount = Math.ceil(books.length / 3);
 
   return !isReady ? <Loader /> : <BooksRowContainer rowsCount={rowsCount} />;
@@ -75,9 +63,9 @@ export default function Home() {
   return (
     <View style={styles.container}>
       <Navbar />
-      <BooksContext.Provider value={{ books }}>
+      <BooksListContext.Provider value={{ books }}>
         <DynamicBooksContainer isReady={booksReady} />
-      </BooksContext.Provider>
+      </BooksListContext.Provider>
       <NavFooter position={0} />
     </View>
   );
@@ -87,20 +75,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  loaderContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    height: screenHeight - 2 * 64,
-  },
   booksRowContainer: {
     width: "100%",
-    paddingVertical: 12,
+    paddingVertical: 16,
     paddingHorizontal: 12,
     marginBottom: 64,
   },
   booksRow: {
     flexDirection: "row",
     justifyContent: "center",
+    paddingBottom: 12,
   },
   booksSubRow: {
     width: 116 * 3,

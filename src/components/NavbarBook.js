@@ -32,6 +32,6 @@ const styles = StyleSheet.create({
   },
   arrowLeftIcon: {
     width: 24,
-    height: 16,
+    height: 20,
   },
 });

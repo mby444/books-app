@@ -1,22 +1,71 @@
 import { useContext } from "react";
 import {
+  Alert,
   Dimensions,
   Image,
+  Linking,
   Pressable,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import { BookContext } from "../screen/Book";
+import { BookContext } from "../context";
+import { decodeHTMLEntities } from "../utils/string-formatter";
+import emptyBookImage from "../../assets/images/empty-book.png";
 
 const dimension = Dimensions.get("window");
 const screenWidth = dimension.width;
+
+function Thumbnail({ uri, altImage }) {
+  const imageSource = uri ? { uri } : altImage;
+
+  return (
+    <View style={styles.imageContainer}>
+        <Image style={styles.image} source={imageSource} />
+    </View>
+  );
+}
+
+function BuyButton({ buyLink, priceText }) {
+  const isAvailable = priceText !== "UNAVAILABLE";
+  const buttonDisabledStyle = !isAvailable ? styles.buyButtonDisabled : null;
+
+  const openBuyLink = () => {
+    Linking.canOpenURL(buyLink)
+      .then((supported) => {
+        if (!supported) throw new Error("URL not supported");
+        return Linking.openURL(buyLink);
+      })
+      .catch((err) => {
+        Alert.alert("Something went wrong");
+        console.log("openBuyLink", err);
+      });
+  };
+
+  const handlePress = () => {
+    if (!isAvailable) return;
+    openBuyLink();
+  };
+
+  return (
+    <Pressable style={[styles.buyButton, buttonDisabledStyle]} onPress={handlePress}>
+      <Text style={styles.buyButtonText}>{priceText}</Text>
+    </Pressable>
+  );
+}
 
 export default function BookInfo() {
   const { book } = useContext(BookContext);
 
   const getThumnail = (data = {}) => {
-    const thumbnail = data?.volumeInfo?.imageLinks?.large;
+    const imageLinks = data?.volumeInfo?.imageLinks;
+    const [thumbnail1, thumbnail2, thumbnail3, thumbnail4] = [
+      imageLinks?.large,
+      imageLinks?.extraLarge,
+      imageLinks?.medium,
+      imageLinks?.small,
+    ];
+    const thumbnail = thumbnail1 || thumbnail2 || thumbnail3 || thumbnail4;
     return thumbnail;
   };
 
@@ -64,7 +113,7 @@ export default function BookInfo() {
 
   const getPublishedDate = (data = {}) => {
     const publishedDate = data?.volumeInfo?.publishedDate;
-    if (!publishedDate) return "(Unknown year)";
+    if (!publishedDate) return "(Unknown release date)";
     const publishedDateText = `Released on ${formatPublishedDate(
       publishedDate
     )}`;
@@ -92,10 +141,11 @@ export default function BookInfo() {
     const formattedPrice = formatPriceText(retailPrice);
     const currencyCode = saleInfo?.retailPrice?.currencyCode;
     const countryPrice = `${currencyCode} ${formattedPrice}`;
+    const buyText = `Buy ${countryPrice}`;
     const isForSale = parseInt(retailPrice) > 0 && sale === "FOR_SALE";
     const isFree = parseInt(retailPrice) === 0 || sale === "FREE";
     const priceText = isForSale
-      ? countryPrice
+      ? buyText
       : isFree
       ? "GET FREE"
       : "UNAVAILABLE";
@@ -106,7 +156,8 @@ export default function BookInfo() {
     const formatted = value
       .replace(/(\<br\>|\<br \/\>)/g, "\n")
       .replace(/<[^>]*>/g, "");
-    return formatted;
+      const decoded = decodeHTMLEntities(formatted);
+    return decoded;
   };
 
   const getDescription = (data = {}) => {
@@ -116,20 +167,24 @@ export default function BookInfo() {
     return formattedDescription;
   };
 
-  const [thumbnail, title, author, publishedDate, price, description] = [
+  const getBuyLink = (data ={}) => {
+    const buyLink = data?.saleInfo?.buyLink;
+    return buyLink;
+  };
+
+  const [thumbnail, title, author, publishedDate, priceText, description, buyLink] = [
     getThumnail(book),
     getTitle(book),
     getAuthor(book),
     getPublishedDate(book),
     getPriceText(book),
     getDescription(book),
+    getBuyLink(book),
   ];
 
   return (
-    <View style={styles.mainContainer}>
-      <View style={styles.imageContainer}>
-        <Image style={styles.image} source={{ uri: thumbnail }} />
-      </View>
+    <View>
+      <Thumbnail uri={thumbnail} altImage={emptyBookImage} />
       <View style={styles.titleContainer}>
         <Text style={styles.title}>{title}</Text>
       </View>
@@ -140,9 +195,7 @@ export default function BookInfo() {
         <Text style={styles.date}>{publishedDate}</Text>
       </View>
       <View style={styles.buyButtonContainer}>
-        <Pressable style={styles.buyButton}>
-          <Text style={styles.buyButtonText}>{price}</Text>
-        </Pressable>
+        <BuyButton buyLink={buyLink} priceText={priceText} />
       </View>
       <View style={styles.aboutTitleContainer}>
         <Text style={styles.aboutTitle}>About this book</Text>
@@ -201,6 +254,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
+  },
+  buyButtonDisabled: {
+    backgroundColor: "#bbb",
   },
   buyButtonText: {
     color: "#fff",

@@ -7,7 +7,6 @@ import {
   View,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-// import thumbnailImage from "../../assets/images/book-example.jpg";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -132,7 +131,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     paddingHorizontal: 12,
-    paddingVertical: 4,
+    paddingBottom: 8,
   },
   thumbnailContainer: {},
   infoContainer: {
@@ -158,20 +157,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#555",
     paddingBottom: 4,
-  },
-  starContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingBottom: 6,
-  },
-  starIcon: {
-    width: 18,
-    height: 18,
-  },
-  starText: {
-    fontSize: 16,
-    color: "#000",
-    paddingLeft: 6,
   },
   publisedDateText: {
     fontSize: 16,

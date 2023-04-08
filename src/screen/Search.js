@@ -1,5 +1,4 @@
 import {
-  ActivityIndicator,
   Dimensions,
   ScrollView,
   StyleSheet,
@@ -8,6 +7,7 @@ import {
 } from "react-native";
 import { useEffect, useState } from "react";
 import useSearchBooks from "../hooks/useSearchBooks";
+import Loader from "../components/Loader";
 import NavbarSearch from "../components/NavbarSearch";
 import NavFooter from "../components/NavFooter";
 import BooksSearch from "../components/BooksSearch";
@@ -26,14 +26,6 @@ function NotFound() {
   return (
     <View style={styles.notFoundContainer}>
       <Text style={styles.notFoundText}>Not found.</Text>
-    </View>
-  );
-}
-
-function Loader() {
-  return (
-    <View style={styles.loaderContainer}>
-      <ActivityIndicator style={styles.loader} size="large" />
     </View>
   );
 }
@@ -107,16 +99,7 @@ const styles = StyleSheet.create({
   },
   booksContainer: {
     paddingVertical: 8,
-    marginBottom: 64,
-  },
-  loaderContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    height: screenHeight - 2 * 64,
-  },
-  loader: {
-    width: 40,
-    height: 40,
+    marginBottom: 64 + 8,
   },
   emptyContainer: {
     alignItems: "center",
