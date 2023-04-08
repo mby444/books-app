@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { http2https } from "../utils/string-formatter";
 import { useNavigation } from "@react-navigation/native";
 
 const screenWidth = Dimensions.get("window").width;
@@ -20,7 +21,8 @@ export default function BooksSearch({ data = {} }) {
 
   const getThumbnailUrl = (data = {}) => {
     const value = data?.volumeInfo?.imageLinks?.thumbnail;
-    return value;
+    const url = http2https(value);
+    return url;
   };
 
   const getTitle = (data = {}) => {

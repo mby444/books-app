@@ -10,14 +10,14 @@ import {
   View,
 } from "react-native";
 import { BookContext } from "../context";
-import { decodeHTMLEntities } from "../utils/string-formatter";
+import { decodeHTMLEntities, http2https } from "../utils/string-formatter";
 import emptyBookImage from "../../assets/images/empty-book.png";
 
 const dimension = Dimensions.get("window");
 const screenWidth = dimension.width;
 
 function Thumbnail({ uri, altImage }) {
-  const imageSource = uri ? { uri } : altImage;
+  const imageSource = uri ? { uri: http2https(uri) } : altImage;
 
   return (
     <View style={styles.imageContainer}>

@@ -18,6 +18,12 @@ export const decodeHTMLEntities = (text) => {
     return text;
 }
 
+export const http2https = (url="") => {
+  const output = url.replace(/(http:)/, "https:");
+  return output;
+};
+
 export default {
     decodeHTMLEntities,
+    http2https,
 };

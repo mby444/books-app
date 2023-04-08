@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { http2https } from "../utils/string-formatter";
 
 export default function BooksHome({ data = {} }) {
   const navigation = useNavigation();
@@ -19,7 +20,8 @@ export default function BooksHome({ data = {} }) {
 
   const getThumbnailUrl = (data = {}) => {
     const value = data?.volumeInfo?.imageLinks?.thumbnail;
-    return value;
+    const url = http2https(value);
+    return url;
   };
 
   const getTitle = (data = {}) => {
