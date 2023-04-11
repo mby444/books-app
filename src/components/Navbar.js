@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import HamburgerMenu from "./HamburgerMenu";
 
 function Title({ name }) {
@@ -10,9 +11,15 @@ function Title({ name }) {
 }
 
 export default function Navbar() {
+  const navigation = useNavigation();
+
+  const handleMenuPress = () => {
+    navigation.toggleDrawer();
+  };
+
   return (
     <View style={styles.container}>
-      <HamburgerMenu />
+      <HamburgerMenu onPress={handleMenuPress} />
       <Title name="MBY444 BOOKS" />
     </View>
   );

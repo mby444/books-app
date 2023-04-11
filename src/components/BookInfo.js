@@ -59,13 +59,14 @@ export default function BookInfo() {
 
   const getThumnail = (data = {}) => {
     const imageLinks = data?.volumeInfo?.imageLinks;
-    const [thumbnail1, thumbnail2, thumbnail3, thumbnail4] = [
+    const [thumbnail1, thumbnail2, thumbnail3, thumbnail4, thumbnail5] = [
       imageLinks?.large,
       imageLinks?.extraLarge,
       imageLinks?.medium,
       imageLinks?.small,
+      imageLinks?.thumbnail,
     ];
-    const thumbnail = thumbnail1 || thumbnail2 || thumbnail3 || thumbnail4;
+    const thumbnail = thumbnail1 || thumbnail2 || thumbnail3 || thumbnail4 || thumbnail5;
     return thumbnail;
   };
 
