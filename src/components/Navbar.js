@@ -10,7 +10,7 @@ function Title({ name }) {
   );
 }
 
-export default function Navbar() {
+export default function Navbar({ title = "" }) {
   const navigation = useNavigation();
 
   const handleMenuPress = () => {
@@ -20,7 +20,7 @@ export default function Navbar() {
   return (
     <View style={styles.container}>
       <HamburgerMenu onPress={handleMenuPress} />
-      <Title name="MBY444 BOOKS" />
+      <Title name={title} />
     </View>
   );
 }

@@ -62,7 +62,7 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <Navbar />
+      <Navbar title="MBY444 BOOKS" />
       <BooksListContext.Provider value={{ books }}>
         <DynamicBooksContainer isReady={booksReady} />
       </BooksListContext.Provider>

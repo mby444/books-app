@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import {
   Alert,
   Dimensions,
@@ -12,6 +12,8 @@ import {
 import { BookContext } from "../context";
 import { decodeHTMLEntities, http2https } from "../utils/string-formatter";
 import emptyBookImage from "../../assets/images/empty-book.png";
+import bookmarkIcon from "../../assets/images/bookmark-blue-icon.png";
+import bookmarkCheckedIcon from "../../assets/images/bookmark-checked-blue-icon.png";
 
 const dimension = Dimensions.get("window");
 const screenWidth = dimension.width;
@@ -50,6 +52,21 @@ function BuyButton({ buyLink, priceText }) {
   return (
     <Pressable style={[styles.buyButton, buttonDisabledStyle]} onPress={handlePress}>
       <Text style={styles.buyButtonText}>{priceText}</Text>
+    </Pressable>
+  );
+}
+
+function SaveButton() {
+  const [isSaved, setIsSaved] = useState(false);
+  return isSaved ? (
+    <Pressable>
+      <Image source={bookmarkCheckedIcon} />
+      <Text>Added</Text>
+    </Pressable>
+  ) : (
+    <Pressable>
+      <Image source={bookmarkIcon} />
+      <Text>Add to wishlist</Text>
     </Pressable>
   );
 }
