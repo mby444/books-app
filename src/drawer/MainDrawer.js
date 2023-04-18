@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   pressableItem: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 12,
+    paddingHorizontal: 26,
     paddingVertical: 16,
   },
   iconItem: {

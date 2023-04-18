@@ -18,7 +18,7 @@ export const setStorageData = async (key, value) => {
   }
 };
 
-export const deleteStorage = async (key) => {
+export const deleteStorageData = async (key) => {
   try {
     await AsyncStorage.removeItem(key);
   } catch (err) {
@@ -29,5 +29,5 @@ export const deleteStorage = async (key) => {
 export default {
   getStorageData,
   setStorageData,
-  deleteStorage,
+  deleteStorageData,
 };

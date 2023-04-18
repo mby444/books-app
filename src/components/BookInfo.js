@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Alert,
   Dimensions,
@@ -9,7 +9,8 @@ import {
   Text,
   View,
 } from "react-native";
-import { BookContext } from "../context";
+import { BookContext, BookWishlistContext } from "../context";
+import { deleteStorageData, getStorageData, setStorageData } from "../utils/storage";
 import { decodeHTMLEntities, http2https } from "../utils/string-formatter";
 import emptyBookImage from "../../assets/images/empty-book.png";
 import bookmarkIcon from "../../assets/images/bookmark-blue-icon.png";
@@ -57,22 +58,81 @@ function BuyButton({ buyLink, priceText }) {
 }
 
 function SaveButton() {
+  const { book } = useContext(BookContext);
+  const { bookWishlist } = useContext(BookWishlistContext);
   const [isSaved, setIsSaved] = useState(false);
+
+  const getIsInWishlist = () => {
+    return bookWishlist.filter((b) => b.id === book.id).length > 0;
+  };
+  
+  const saveBookWishlist = async (data) => {
+    const storageKey = "@book_wishlist";
+    const jsonData = JSON.stringify(data);
+    await setStorageData(storageKey, jsonData);
+  };
+
+  const addToWishlist = async (callback = Function(), errCallback = Function()) => {
+    try {
+      const filteredBookWishlist = bookWishlist.filter((b) => b.id !== book.id);
+      const newWishlist = [...filteredBookWishlist, book];
+      await saveBookWishlist(newWishlist);
+      callback();
+    } catch (err) {
+      console.log("addToWishlist", err);
+      errCallback(err);
+    }
+  };
+
+  const removeFromWishlist = async (callback = Function(), errCallback = Function()) => {
+    try {
+      const newWishlist = bookWishlist.filter((b) => b.id !== book.id);
+      await saveBookWishlist(newWishlist);
+      callback();
+    } catch (err) {
+      console.log("removeFromWishlist", err);
+      errCallback(err);
+    }
+  };
+
+  const handleSavePress = () => {
+    addToWishlist(() => {
+      setIsSaved(true);
+    });
+  };
+
+  const handleUnsavePress = () => {
+    removeFromWishlist(() => {
+      setIsSaved(false);
+    });
+  };
+
+  useEffect(() => {
+    const isInWishlist = getIsInWishlist();
+    setIsSaved(isInWishlist);
+    console.log(bookWishlist.length);
+  }, []);
+
   return isSaved ? (
-    <Pressable>
-      <Image source={bookmarkCheckedIcon} />
-      <Text>Added</Text>
+    <Pressable style={styles.unsaveButton} onPress={handleUnsavePress}>
+      <Image style={styles.unsaveButtonIcon} source={bookmarkCheckedIcon} />
+      <Text style={styles.unsaveButtonText}>Added</Text>
     </Pressable>
   ) : (
-    <Pressable>
-      <Image source={bookmarkIcon} />
-      <Text>Add to wishlist</Text>
+    <Pressable style={styles.saveButton} onPress={handleSavePress}>
+      <Image style={styles.saveButtonIcon} source={bookmarkIcon} />
+      <Text style={styles.saveButtonText}>Add to wishlist</Text>
     </Pressable>
   );
 }
 
 export default function BookInfo() {
   const { book } = useContext(BookContext);
+
+  const getBookId = (data) => {
+    const { id } = data;
+    return id;
+  };
 
   const getThumnail = (data = {}) => {
     const imageLinks = data?.volumeInfo?.imageLinks;
@@ -190,7 +250,8 @@ export default function BookInfo() {
     return buyLink;
   };
 
-  const [thumbnail, title, author, publishedDate, priceText, description, buyLink] = [
+  const [id, thumbnail, title, author, publishedDate, priceText, description, buyLink] = [
+    getBookId(book),
     getThumnail(book),
     getTitle(book),
     getAuthor(book),
@@ -214,6 +275,9 @@ export default function BookInfo() {
       </View>
       <View style={styles.buyButtonContainer}>
         <BuyButton buyLink={buyLink} priceText={priceText} />
+      </View>
+      <View style={styles.saveButtonContainer}>
+        <SaveButton bookId={id} />
       </View>
       <View style={styles.aboutTitleContainer}>
         <Text style={styles.aboutTitle}>About this book</Text>
@@ -263,7 +327,7 @@ const styles = StyleSheet.create({
   },
   buyButtonContainer: {
     paddingHorizontal: 26,
-    paddingBottom: 46,
+    paddingBottom: 20,
   },
   buyButton: {
     width: "100%",
@@ -279,6 +343,44 @@ const styles = StyleSheet.create({
   buyButtonText: {
     color: "#fff",
     fontSize: 18,
+  },
+  saveButtonContainer: {
+    paddingHorizontal: 26,
+    paddingBottom: 46,
+  },
+  saveButton: {
+    width: "100%",
+    height: 40,
+    backgroundColor: "#0000",
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    borderWidth: 1,
+    borderColor: "#2A6084",
+  },
+  saveButtonText: {
+    color: "#2A6084",
+    paddingLeft: 6,
+  },
+  unsaveButtonContainer: {
+    paddingHorizontal: 26,
+    paddingBottom: 46,
+  },
+  unsaveButton: {
+    width: "100%",
+    height: 40,
+    backgroundColor: "#0000",
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    borderWidth: 1,
+    borderColor: "#2A6084",
+  },
+  unsaveButtonText: {
+    color: "#2A6084",
+    paddingLeft: 6,
   },
   aboutTitleContainer: {
     paddingHorizontal: 26,
