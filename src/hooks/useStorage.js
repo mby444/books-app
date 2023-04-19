@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import {
-  deleteStorage,
+  deleteStorageData,
   getStorageData,
   setStorageData,
 } from "../utils/storage";
@@ -22,7 +22,7 @@ const useStorage = (key) => {
       setStorageData(key, value).then(() => setStorage(value));
     },
     clear() {
-      deleteStorage(key).then(() => setStorage(""));
+      deleteStorageData(key).then(() => setStorage(""));
     },
   };
 

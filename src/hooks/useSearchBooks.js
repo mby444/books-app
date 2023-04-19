@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  deleteStorage,
+  deleteStorageData,
   getStorageData,
   setStorageData,
 } from "../utils/storage";
@@ -77,9 +77,9 @@ const useSearchBooks = () => {
 
   const clearBooks = () => {
     setBooksReady(false);
-    deleteStorage(searchTextKey)
+    deleteStorageData(searchTextKey)
       .then(() => {
-        return deleteStorage(searchedBooksKey);
+        return deleteStorageData(searchedBooksKey);
       })
       .catch((err) => {
         console.log("ClearBooksError", err);
