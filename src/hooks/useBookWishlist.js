@@ -12,7 +12,7 @@ export default function useBookWishlist() {
         return wishlist;
     };
 
-    useEffect(() => {
+    const loadBookWishlist = () => {
         setBookWishlistReady(false);
         genBookWishlist()
         .then((wishlist) => {
@@ -23,10 +23,19 @@ export default function useBookWishlist() {
             console.log(err)
             setBookWishlistReady(false);
         });
+    };
+
+    const reloadBookWishlist = () => {
+        loadBookWishlist();
+    };
+
+    useEffect(() => {
+        loadBookWishlist();
     }, []);
 
     return {
         bookWishlist,
         bookWishlistReady,
+        reloadBookWishlist,
     };
 }

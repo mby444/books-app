@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useNavigation } from "@react-navigation/native";
 import HomeStack from "../stack/HomeStack";
-import Watchlist from "../screen/Watchlist";
+import Wishlist from "../screen/Wishlist";
 import homeIcon from "../../assets/images/home-dark-icon.png";
 import searchIcon from "../../assets/images/search-dark-icon.png";
 import wishlistIcon from "../../assets/images/wishlist-dark-icon.png";
@@ -69,7 +69,7 @@ export default function MainDrawer() {
         screenOptions={{ headerShown: false }}
       >
         <Drawer.Screen name="HomeStack" component={HomeStack} />
-        <Drawer.Screen name="Wishlist" component={Watchlist} />
+        <Drawer.Screen name="Wishlist" component={Wishlist} />
       </Drawer.Navigator>
     </NavigationContainer>
   );

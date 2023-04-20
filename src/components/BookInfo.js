@@ -10,7 +10,7 @@ import {
   View,
 } from "react-native";
 import { BookContext, BookWishlistContext } from "../context";
-import { deleteStorageData, getStorageData, setStorageData } from "../utils/storage";
+import { setStorageData } from "../utils/storage";
 import { decodeHTMLEntities, http2https } from "../utils/string-formatter";
 import emptyBookImage from "../../assets/images/empty-book.png";
 import bookmarkIcon from "../../assets/images/bookmark-blue-icon.png";
@@ -110,7 +110,6 @@ function SaveButton() {
   useEffect(() => {
     const isInWishlist = getIsInWishlist();
     setIsSaved(isInWishlist);
-    console.log(bookWishlist.length);
   }, []);
 
   return isSaved ? (
