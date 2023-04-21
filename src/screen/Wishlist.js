@@ -1,21 +1,13 @@
-import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
+import { BookContext, BookWishlistContext, WishlistActionContext } from '../context';
+import { getStorageData, setStorageData } from '../utils/storage';
+import useBookWishlist from "../hooks/useBookWishlist";
 import Navbar from "../components/Navbar";
 import Loader from '../components/Loader';
+import Empty from '../components/Empty';
 import BookWishlist from '../components/BookWishlist';
-import { BookContext, BookWishlistContext } from '../context';
-import useBookWishlist from "../hooks/useBookWishlist";
-
-const screenHeight = Dimensions.get("window").height;
-
-function Empty() {
-  return (
-    <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>No results yet.</Text>
-    </View>
-  );
-}
 
 function BooksContainer({ books = [] }) {
   return (
@@ -47,6 +39,38 @@ function DynamicBooksContainer({ books, isLoading }) {
 
 export default function Wishlist() {
   const { bookWishlist, bookWishlistReady, reloadBookWishlist } = useBookWishlist();
+  const storageKey = "@book_wishlist";
+
+  const saveBookWishlist = async (data) => {
+    const jsonData = JSON.stringify(data);
+    await setStorageData(storageKey, jsonData);
+  };
+
+  const addBookWishlist = (data) => {
+    getStorageData(storageKey)
+    .then((response) => JSON.parse(response))
+    .then((wishlist) => {
+      const hadAdded = !!wishlist.find((w) => w.id === data.id);
+      if (hadAdded) return;
+      const newWishlist = [...wishlist, data];
+      return saveBookWishlist(newWishlist);
+    })
+    .catch((err) => {
+      console.log("addBookWishlist", err);
+    });
+  };
+
+  const removeBookWishlist = (bookId) => {
+    getStorageData(storageKey)
+    .then((response) => JSON.parse(response))
+    .then((wishlist) => {
+      const newWishlist = wishlist.filter((w) => w.id !== bookId);
+      return saveBookWishlist(newWishlist);
+    })
+    .catch((err) => {
+      console.log("removeBookWishlist", err);
+    });
+  };
 
   useFocusEffect(useCallback(() => {
     reloadBookWishlist();
@@ -55,7 +79,9 @@ export default function Wishlist() {
   return (
     <View style={styles.container}>
       <Navbar title="Wishlist" />
-      <DynamicBooksContainer books={bookWishlist} isLoading={!bookWishlistReady} />
+      <WishlistActionContext.Provider value={{ addBookWishlist, removeBookWishlist }}>
+        <DynamicBooksContainer books={bookWishlist} isLoading={!bookWishlistReady} />
+      </WishlistActionContext.Provider>
     </View>
   );
 }
@@ -67,14 +93,5 @@ const styles = StyleSheet.create({
   booksContainer: {
     paddingVertical: 16,
     marginBottom: 64 + 8,
-  },
-  emptyContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    height: screenHeight - 2 * 64,
-  },
-  emptyText: {
-    fontSize: 20,
-    color: "#555",
   },
 });

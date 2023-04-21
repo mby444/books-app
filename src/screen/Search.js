@@ -1,8 +1,6 @@
 import {
-  Dimensions,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import { useEffect, useState } from "react";
@@ -11,24 +9,8 @@ import Loader from "../components/Loader";
 import NavbarSearch from "../components/NavbarSearch";
 import NavFooter from "../components/NavFooter";
 import BooksSearch from "../components/BooksSearch";
-
-const screenHeight = Dimensions.get("window").height;
-
-function Empty() {
-  return (
-    <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>No results yet.</Text>
-    </View>
-  );
-}
-
-function NotFound() {
-  return (
-    <View style={styles.notFoundContainer}>
-      <Text style={styles.notFoundText}>Not found.</Text>
-    </View>
-  );
-}
+import Empty from "../components/Empty";
+import NotFound from "../components/NotFound";
 
 function BooksContainer({ books = [] }) {
   return (
@@ -100,23 +82,5 @@ const styles = StyleSheet.create({
   booksContainer: {
     paddingVertical: 8,
     marginBottom: 64 + 8,
-  },
-  emptyContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    height: screenHeight - 2 * 64,
-  },
-  emptyText: {
-    fontSize: 20,
-    color: "#555",
-  },
-  notFoundContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    height: screenHeight - 2 * 64,
-  },
-  notFoundText: {
-    fontSize: 20,
-    color: "#555",
   },
 });

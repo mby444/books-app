@@ -5,6 +5,7 @@ import {
   setStorageData,
 } from "../utils/storage";
 import { getApiKey } from "../utils/config";
+import { timedFetch } from "../utils/request";
 
 const useSearchBooks = () => {
   const searchedBooksKey = "@searched_books";
@@ -54,7 +55,7 @@ const useSearchBooks = () => {
 
   const searchBooks = (searchQuery) => {
     setBooksReady(false);
-    fetch(
+    timedFetch(
       `https://www.googleapis.com/books/v1/volumes?q=${searchQuery}&key=${apiKey}`
     )
       .then((response) => response.json())
