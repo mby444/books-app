@@ -1,15 +1,12 @@
-import {
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
-import { useContext } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { useContext, useEffect } from "react";
 import useHomeBooks from "../hooks/useHomeBooks";
-import { BooksListContext } from "../context";
+import { BooksLoadActionContext, BooksListContext } from "../context";
 import Loader from "../components/Loader";
 import Navbar from "../components/Navbar";
 import NavFooter from "../components/NavFooter";
 import BooksHome from "../components/BooksHome";
+import TimedOut from "../components/TimedOut";
 
 function BooksRow({ books = [] }) {
   return (
@@ -50,21 +47,29 @@ function BooksRowContainer({ rowsCount = 0 }) {
   );
 }
 
-function DynamicBooksContainer({ isReady = false }) {
+function DynamicBooksContainer({ isReady = false, errorObj = {} }) {
   const { books } = useContext(BooksListContext);
   const rowsCount = Math.ceil(books.length / 3);
 
-  return !isReady ? <Loader /> : <BooksRowContainer rowsCount={rowsCount} />;
+  return !isReady ? (
+    <Loader />
+  ) : errorObj.error ? (
+    <TimedOut title={errorObj.message} />
+  ) : (
+    <BooksRowContainer rowsCount={rowsCount} />
+  );
 }
 
 export default function Home() {
-  const { books, booksReady } = useHomeBooks();
+  const { books, booksReady, booksErrorObj, reloadBooks } = useHomeBooks();
 
   return (
     <View style={styles.container}>
       <Navbar title="MBY444 BOOKS" />
       <BooksListContext.Provider value={{ books }}>
-        <DynamicBooksContainer isReady={booksReady} />
+        <BooksLoadActionContext.Provider value={{ load: reloadBooks }}>
+          <DynamicBooksContainer isReady={booksReady} errorObj={booksErrorObj} />
+        </BooksLoadActionContext.Provider>
       </BooksListContext.Provider>
       <NavFooter position={0} />
     </View>

@@ -6,7 +6,7 @@ const useHomeBooks = () => {
   const apiKey = getApiKey();
   const shelfInfo = getBookShelves();
   const [booksReady, setBooksReady] = useState(false);
-  const [booksError, setBooksError] = useState(false);
+  const [booksErrorObj, setBooksErrorObj] = useState({});
   const [books, setBooks] = useState([]);
 
   const getAllBooks = async () => {
@@ -17,25 +17,43 @@ const useHomeBooks = () => {
       const { items } = response;
       return items;
     } catch (err) {
-      console.log("useHomeBooks", err);
+      const errorObj = {
+        error: true,
+        message: "Something went wrong",
+      };
+      setBooksErrorObj(errorObj);
       return [];
     }
   };
 
   const loadBooks = async () => {
+    setBooksReady(false);
+    initBooksErrorObj();
     const booksData = await getAllBooks();
     setBooks(booksData);
     setBooksReady(true);
   };
 
+  const reloadBooks = () => {
+    loadBooks();
+  };
+
+  const initBooksErrorObj = () => {
+    setBooksErrorObj({
+      error: false,
+      message: "",
+    });
+  };
+
   useEffect(() => {
-    setBooksReady(false);
     loadBooks();
   }, []);
 
   return {
     books,
     booksReady,
+    booksErrorObj,
+    reloadBooks,
   };
 };
 

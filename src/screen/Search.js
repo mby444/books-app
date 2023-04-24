@@ -1,9 +1,6 @@
-import {
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { useEffect, useState } from "react";
+import { BooksLoadActionContext } from "../context";
 import useSearchBooks from "../hooks/useSearchBooks";
 import Loader from "../components/Loader";
 import NavbarSearch from "../components/NavbarSearch";
@@ -11,6 +8,7 @@ import NavFooter from "../components/NavFooter";
 import BooksSearch from "../components/BooksSearch";
 import Empty from "../components/Empty";
 import NotFound from "../components/NotFound";
+import TimedOut from "../components/TimedOut";
 
 function BooksContainer({ books = [] }) {
   return (
@@ -22,11 +20,13 @@ function BooksContainer({ books = [] }) {
   );
 }
 
-function DynamicBooksContainer({ books, isLoading, isNotFoundError }) {
+function DynamicBooksContainer({ books, isLoading, netErrorObj, isNotFoundError }) {
   return (
     <>
       {isLoading ? (
         <Loader />
+      ) : netErrorObj.error ? (
+        <TimedOut title={netErrorObj.message} />
       ) : isNotFoundError ? (
         <NotFound />
       ) : !books.length ? (
@@ -39,7 +39,7 @@ function DynamicBooksContainer({ books, isLoading, isNotFoundError }) {
 }
 
 export default function Search() {
-  const { booksError, booksReady, completedBooks, searchBooks, clearBooks } =
+  const { booksError, booksNetErrorObj, booksReady, completedBooks, searchBooks, clearBooks, reloadSearchedBooks } =
     useSearchBooks();
   const [navFooterVisible, setNavFooterVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
@@ -65,11 +65,14 @@ export default function Search() {
         onFocus={() => setNavFooterVisible(false)}
         onBlur={() => setNavFooterVisible(true)}
       />
-      <DynamicBooksContainer
-        books={completedBooks}
-        isLoading={isLoading}
-        isNotFoundError={booksError}
-      />
+      <BooksLoadActionContext.Provider value={{ load: reloadSearchedBooks }}>
+        <DynamicBooksContainer
+          books={completedBooks}
+          isLoading={isLoading}
+          netErrorObj={booksNetErrorObj}
+          isNotFoundError={booksError}
+        />
+      </BooksLoadActionContext.Provider>
       <NavFooter position={1} visible={navFooterVisible} />
     </View>
   );

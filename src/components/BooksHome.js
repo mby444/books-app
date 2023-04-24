@@ -1,12 +1,11 @@
-import {
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Image, TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { getBookId, getThumbnailUrl, getTitle, getPriceText } from "../utils/book-data";
+import {
+  getBookId,
+  getThumbnailUrl,
+  getTitle,
+  getPriceText,
+} from "../utils/book-data";
 
 export default function BooksHome({ data = {} }) {
   const navigation = useNavigation();

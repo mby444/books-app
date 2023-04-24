@@ -12,9 +12,7 @@ import settingIcon from "../../assets/images/setting-dark-icon.png";
 const Drawer = createDrawerNavigator();
 
 function MainDrawerHeader() {
-  return (
-    <View style={styles.header}></View>
-  );
+  return <View style={styles.header}></View>;
 }
 
 function MainDrawerItem({ name, icon, text }) {
@@ -40,7 +38,12 @@ function DrawerItemList({ dataList }) {
   return (
     <>
       {dataList.map((data) => (
-        <MainDrawerItem name={data.name} icon={data.icon} text={data.text} key={data.id} />
+        <MainDrawerItem
+          name={data.name}
+          icon={data.icon}
+          text={data.text}
+          key={data.id}
+        />
       ))}
     </>
   );

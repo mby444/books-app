@@ -7,7 +7,14 @@ import {
   View,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { getBookId, getThumbnailUrl, getTitle, getAuthor, getPublishedDate, getPriceText } from "../utils/book-data";
+import {
+  getBookId,
+  getThumbnailUrl,
+  getTitle,
+  getAuthor,
+  getPublishedDate,
+  getPriceText,
+} from "../utils/book-data";
 
 const screenWidth = Dimensions.get("window").width;
 

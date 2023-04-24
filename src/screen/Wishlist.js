@@ -1,13 +1,17 @@
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { useCallback } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
-import { BookContext, BookWishlistContext, WishlistActionContext } from '../context';
-import { getStorageData, setStorageData } from '../utils/storage';
+import { ScrollView, StyleSheet, View } from "react-native";
+import { useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import {
+  BookContext,
+  BookWishlistContext,
+  WishlistActionContext,
+} from "../context";
+import { getStorageData, setStorageData } from "../utils/storage";
 import useBookWishlist from "../hooks/useBookWishlist";
 import Navbar from "../components/Navbar";
-import Loader from '../components/Loader';
-import Empty from '../components/Empty';
-import BookWishlist from '../components/BookWishlist';
+import Loader from "../components/Loader";
+import Empty from "../components/Empty";
+import BookWishlist from "../components/BookWishlist";
 
 function BooksContainer({ books = [] }) {
   return (
@@ -38,7 +42,8 @@ function DynamicBooksContainer({ books, isLoading }) {
 }
 
 export default function Wishlist() {
-  const { bookWishlist, bookWishlistReady, reloadBookWishlist } = useBookWishlist();
+  const { bookWishlist, bookWishlistReady, reloadBookWishlist } =
+    useBookWishlist();
   const storageKey = "@book_wishlist";
 
   const saveBookWishlist = async (data) => {
@@ -48,39 +53,46 @@ export default function Wishlist() {
 
   const addBookWishlist = (data) => {
     getStorageData(storageKey)
-    .then((response) => JSON.parse(response))
-    .then((wishlist) => {
-      const hadAdded = !!wishlist.find((w) => w.id === data.id);
-      if (hadAdded) return;
-      const newWishlist = [...wishlist, data];
-      return saveBookWishlist(newWishlist);
-    })
-    .catch((err) => {
-      console.log("addBookWishlist", err);
-    });
+      .then((response) => JSON.parse(response))
+      .then((wishlist) => {
+        const hadAdded = !!wishlist.find((w) => w.id === data.id);
+        if (hadAdded) return;
+        const newWishlist = [...wishlist, data];
+        return saveBookWishlist(newWishlist);
+      })
+      .catch((err) => {
+        console.log("addBookWishlist", err);
+      });
   };
 
   const removeBookWishlist = (bookId) => {
     getStorageData(storageKey)
-    .then((response) => JSON.parse(response))
-    .then((wishlist) => {
-      const newWishlist = wishlist.filter((w) => w.id !== bookId);
-      return saveBookWishlist(newWishlist);
-    })
-    .catch((err) => {
-      console.log("removeBookWishlist", err);
-    });
+      .then((response) => JSON.parse(response))
+      .then((wishlist) => {
+        const newWishlist = wishlist.filter((w) => w.id !== bookId);
+        return saveBookWishlist(newWishlist);
+      })
+      .catch((err) => {
+        console.log("removeBookWishlist", err);
+      });
   };
 
-  useFocusEffect(useCallback(() => {
-    reloadBookWishlist();
-  }, []));
+  useFocusEffect(
+    useCallback(() => {
+      reloadBookWishlist();
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
       <Navbar title="Wishlist" />
-      <WishlistActionContext.Provider value={{ addBookWishlist, removeBookWishlist }}>
-        <DynamicBooksContainer books={bookWishlist} isLoading={!bookWishlistReady} />
+      <WishlistActionContext.Provider
+        value={{ addBookWishlist, removeBookWishlist }}
+      >
+        <DynamicBooksContainer
+          books={bookWishlist}
+          isLoading={!bookWishlistReady}
+        />
       </WishlistActionContext.Provider>
     </View>
   );

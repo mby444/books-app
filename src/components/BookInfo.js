@@ -24,7 +24,7 @@ function Thumbnail({ uri, altImage }) {
 
   return (
     <View style={styles.imageContainer}>
-        <Image style={styles.image} source={imageSource} />
+      <Image style={styles.image} source={imageSource} />
     </View>
   );
 }
@@ -51,7 +51,10 @@ function BuyButton({ buyLink, priceText }) {
   };
 
   return (
-    <Pressable style={[styles.buyButton, buttonDisabledStyle]} onPress={handlePress}>
+    <Pressable
+      style={[styles.buyButton, buttonDisabledStyle]}
+      onPress={handlePress}
+    >
       <Text style={styles.buyButtonText}>{priceText}</Text>
     </Pressable>
   );
@@ -65,14 +68,17 @@ function SaveButton() {
   const getIsInWishlist = () => {
     return bookWishlist.filter((b) => b.id === book.id).length > 0;
   };
-  
+
   const saveBookWishlist = async (data) => {
     const storageKey = "@book_wishlist";
     const jsonData = JSON.stringify(data);
     await setStorageData(storageKey, jsonData);
   };
 
-  const addToWishlist = async (callback = Function(), errCallback = Function()) => {
+  const addToWishlist = async (
+    callback = Function(),
+    errCallback = Function()
+  ) => {
     try {
       const filteredBookWishlist = bookWishlist.filter((b) => b.id !== book.id);
       const newWishlist = [...filteredBookWishlist, book];
@@ -84,7 +90,10 @@ function SaveButton() {
     }
   };
 
-  const removeFromWishlist = async (callback = Function(), errCallback = Function()) => {
+  const removeFromWishlist = async (
+    callback = Function(),
+    errCallback = Function()
+  ) => {
     try {
       const newWishlist = bookWishlist.filter((b) => b.id !== book.id);
       await saveBookWishlist(newWishlist);
@@ -142,7 +151,8 @@ export default function BookInfo() {
       imageLinks?.small,
       imageLinks?.thumbnail,
     ];
-    const thumbnail = thumbnail1 || thumbnail2 || thumbnail3 || thumbnail4 || thumbnail5;
+    const thumbnail =
+      thumbnail1 || thumbnail2 || thumbnail3 || thumbnail4 || thumbnail5;
     return thumbnail;
   };
 
@@ -221,11 +231,7 @@ export default function BookInfo() {
     const buyText = `Buy ${countryPrice}`;
     const isForSale = parseInt(retailPrice) > 0 && sale === "FOR_SALE";
     const isFree = parseInt(retailPrice) === 0 || sale === "FREE";
-    const priceText = isForSale
-      ? buyText
-      : isFree
-      ? "GET FREE"
-      : "UNAVAILABLE";
+    const priceText = isForSale ? buyText : isFree ? "GET FREE" : "UNAVAILABLE";
     return priceText;
   };
 
@@ -233,7 +239,7 @@ export default function BookInfo() {
     const formatted = value
       .replace(/(\<br\>|\<br \/\>)/g, "\n")
       .replace(/<[^>]*>/g, "");
-      const decoded = decodeHTMLEntities(formatted);
+    const decoded = decodeHTMLEntities(formatted);
     return decoded;
   };
 
@@ -244,12 +250,21 @@ export default function BookInfo() {
     return formattedDescription;
   };
 
-  const getBuyLink = (data ={}) => {
+  const getBuyLink = (data = {}) => {
     const buyLink = data?.saleInfo?.buyLink;
     return buyLink;
   };
 
-  const [id, thumbnail, title, author, publishedDate, priceText, description, buyLink] = [
+  const [
+    id,
+    thumbnail,
+    title,
+    author,
+    publishedDate,
+    priceText,
+    description,
+    buyLink,
+  ] = [
     getBookId(book),
     getThumnail(book),
     getTitle(book),

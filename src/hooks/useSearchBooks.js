@@ -10,22 +10,20 @@ import { timedFetch } from "../utils/request";
 const useSearchBooks = () => {
   const searchedBooksKey = "@searched_books";
   const searchTextKey = "@search_text";
+  const searchQueryKey = "@search_query";
+  const netErrorKey = "@search_net_error";
   const apiKey = getApiKey();
   const isInitLoaded = useRef(false);
   const [searchedBooks, setSearchedBooks] = useState([]);
   const [completedBooks, setCompletedBooks] = useState([]);
   const [booksError, setBooksError] = useState(false);
+  const [booksNetErrorObj, setBooksNetErrorObj] = useState({});
   const [booksReady, setBooksReady] = useState(false);
 
   useEffect(() => {
     isInitLoaded.current = false;
     setBooksReady(false);
-    (async () => {
-      const rawPastSearchedBooks = await getStorageData(searchedBooksKey);
-      const pastSearchedBooks = JSON.parse(rawPastSearchedBooks || "[]");
-      setSearchedBooks(pastSearchedBooks);
-      isInitLoaded.current = true;
-    })();
+    loadPastSearchedBooks();
   }, []);
 
   useEffect(() => {
@@ -36,8 +34,24 @@ const useSearchBooks = () => {
     if (isInitLoaded.current) setBooksReady(true);
   }, [isInitLoaded.current]);
 
+  const loadPastSearchedBooks = async () => {
+    const rawPastSearchedBooks = await getStorageData(searchedBooksKey);
+    const pastSearchedBooks = JSON.parse(rawPastSearchedBooks || "[]");
+    setSearchedBooks(pastSearchedBooks);
+    isInitLoaded.current = true;
+  };
+
+  const getPastSearchQuery = async () => {
+    const text = await getStorageData(searchQueryKey) || "";
+    return text?.trim();
+  };
+
   const storeBooks = async (items) => {
     await setStorageData(searchedBooksKey, JSON.stringify(items));
+  };
+
+  const storeSearchQuery = async (searchQuery) => {
+    await setStorageData(searchQueryKey, String(searchQuery));
   };
 
   const filterBooks = (values = []) => {
@@ -53,20 +67,38 @@ const useSearchBooks = () => {
     });
   };
 
+  const initNetErrorObj = () => {
+    setBooksNetErrorObj({
+      error: false,
+      message: "",
+    });
+  };
+
   const searchBooks = (searchQuery) => {
     setBooksReady(false);
+    initNetErrorObj();
+    storeSearchQuery(searchQuery);
     timedFetch(
       `https://www.googleapis.com/books/v1/volumes?q=${searchQuery}&key=${apiKey}`
     )
       .then((response) => response.json())
       .then((data) => {
         const { items } = data;
-        if (!items?.length) throw new Error();
+        if (!items?.length) throw new Error("NotFoundError");
         setBooksError(false);
         setSearchedBooks(items);
         return storeBooks(items);
       })
       .catch((err) => {
+        const netErrorObj = {
+          error: false,
+          message: "",
+        };
+        if (err.message === "RequestTimeoutError") {
+          netErrorObj.error = true;
+          netErrorObj.message = "Something went wrong";
+        }
+        setBooksNetErrorObj(netErrorObj);
         setBooksError(true);
         setSearchedBooks([]);
         return storeBooks([]);
@@ -91,13 +123,23 @@ const useSearchBooks = () => {
       });
   };
 
+  const reloadSearchedBooks = () => {
+    setBooksReady(false);
+    getPastSearchQuery()
+    .then((text) => {
+      searchBooks(text);
+    });
+  };
+
   return {
     booksError,
+    booksNetErrorObj,
     booksReady,
     searchedBooks,
     completedBooks,
     searchBooks,
     clearBooks,
+    reloadSearchedBooks,
   };
 };
 
