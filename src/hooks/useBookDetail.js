@@ -19,7 +19,8 @@ const useBookDetail = (bookId = "") => {
         error: false,
         message: "",
       };
-      if (err.message === "RequestTimeoutError") {
+      const isNetError = err.message === "RequestTimeoutError" || err.message === "Network request failed";
+      if (isNetError) {
         netErrorObj.error = true;
         netErrorObj.message = "Something went wrong";
       }

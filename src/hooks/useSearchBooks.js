@@ -11,7 +11,6 @@ const useSearchBooks = () => {
   const searchedBooksKey = "@searched_books";
   const searchTextKey = "@search_text";
   const searchQueryKey = "@search_query";
-  const netErrorKey = "@search_net_error";
   const apiKey = getApiKey();
   const isInitLoaded = useRef(false);
   const [searchedBooks, setSearchedBooks] = useState([]);
@@ -94,7 +93,8 @@ const useSearchBooks = () => {
           error: false,
           message: "",
         };
-        if (err.message === "RequestTimeoutError") {
+        const isNetError = err.message === "RequestTimeoutError" || err.message === "Network request failed";
+        if (isNetError) {
           netErrorObj.error = true;
           netErrorObj.message = "Something went wrong";
         }

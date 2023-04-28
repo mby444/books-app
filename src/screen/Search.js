@@ -84,6 +84,6 @@ const styles = StyleSheet.create({
   },
   booksContainer: {
     paddingVertical: 8,
-    marginBottom: 64 + 8,
+    marginBottom: 64,
   },
 });
