@@ -4,9 +4,9 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useNavigation } from "@react-navigation/native";
 import HomeStack from "../stack/HomeStack";
 import Wishlist from "../screen/Wishlist";
-import homeIcon from "../../assets/images/home-dark-icon.png";
+import homeIcon from "../../assets/images/home-dark-icon-2.png";
 import searchIcon from "../../assets/images/search-dark-icon.png";
-import wishlistIcon from "../../assets/images/wishlist-dark-icon.png";
+import wishlistIcon from "../../assets/images/bookmark-black-icon-2.png";
 import settingIcon from "../../assets/images/setting-dark-icon.png";
 
 const Drawer = createDrawerNavigator();

@@ -17,8 +17,8 @@ import {
   getPublishedDate,
   getPriceText,
 } from "../utils/book-data";
-import bookmarkIcon from "../../assets/images/bookmark-black-icon.png";
-import bookmarkCheckedIcon from "../../assets/images/bookmark-checked-black-icon.png";
+import bookmarkIcon from "../../assets/images/bookmark-black-icon-2.png";
+import bookmarkCheckedIcon from "../../assets/images/bookmark-checked-black-icon-2.png";
 import { useNavigation } from "@react-navigation/native";
 
 const screenWidth = Dimensions.get("window").width;
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     color: "#555",
   },
   bookmarkIcon: {
-    width: 20,
-    height: 20,
+    width: 32,
+    height: 32,
   },
 });

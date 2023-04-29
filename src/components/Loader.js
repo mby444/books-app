@@ -1,18 +1,52 @@
-import { ActivityIndicator, Dimensions, StyleSheet, View } from "react-native";
+import { Animated, Dimensions, StyleSheet, View } from "react-native";
+import { useEffect, useRef } from "react";
+import loadingIcon from "../../assets/images/loading-icon.png";
 
 const screenHeight = Dimensions.get("window").height;
 
-export default function Loader({ height = screenHeight - 2 * 64 }) {
+function AnimatedLoader() {
+  const rotateAnimate = useRef(new Animated.Value(0)).current;
+  const rotateValue = rotateAnimate.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "360deg"],
+  });
+  const rotateStyle = {
+    transform: [
+      { rotate: rotateValue },
+    ],
+  };
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.timing(rotateAnimate, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      })
+    ).start();
+  }, []);
+
   return (
-    <View style={[styles.loaderContainer, { height }]}>
-      <ActivityIndicator style={styles.loader} size="large" />
+    <Animated.Image style={[styles.icon, rotateStyle]} source={loadingIcon} />
+  );
+}
+
+export default function Loader() {
+  return (
+    <View style={styles.container}>
+      <AnimatedLoader />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  loaderContainer: {
+  container: {
     alignItems: "center",
     justifyContent: "center",
+    height: screenHeight - 2 * 64,
   },
+  icon: {
+    width: 100,
+    height: 100,
+  }
 });

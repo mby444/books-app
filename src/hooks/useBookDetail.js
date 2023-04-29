@@ -22,7 +22,7 @@ const useBookDetail = (bookId = "") => {
       const isNetError = err.message === "RequestTimeoutError" || err.message === "Network request failed";
       if (isNetError) {
         netErrorObj.error = true;
-        netErrorObj.message = "Something went wrong";
+        netErrorObj.message = "No internet";
       }
       setBookNetErrorObj(netErrorObj);
       return {};

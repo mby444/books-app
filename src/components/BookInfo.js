@@ -13,8 +13,8 @@ import { BookContext, BookWishlistContext } from "../context";
 import { setStorageData } from "../utils/storage";
 import { decodeHTMLEntities, http2https } from "../utils/string-formatter";
 import emptyBookImage from "../../assets/images/empty-book.png";
-import bookmarkIcon from "../../assets/images/bookmark-blue-icon.png";
-import bookmarkCheckedIcon from "../../assets/images/bookmark-checked-blue-icon.png";
+import bookmarkIcon from "../../assets/images/bookmark-blue-icon-2.png";
+import bookmarkCheckedIcon from "../../assets/images/bookmark-checked-blue-icon-2.png";
 
 const dimension = Dimensions.get("window");
 const screenWidth = dimension.width;
@@ -373,6 +373,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#2A6084",
   },
+  saveButtonIcon: {
+    width: 20,
+    height: 20,
+  },
   saveButtonText: {
     color: "#2A6084",
     paddingLeft: 6,
@@ -391,6 +395,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderWidth: 1,
     borderColor: "#2A6084",
+  },
+  unsaveButtonIcon: {
+    width: 20,
+    height: 20,
   },
   unsaveButtonText: {
     color: "#2A6084",

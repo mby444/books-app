@@ -96,10 +96,11 @@ const useSearchBooks = () => {
         const isNetError = err.message === "RequestTimeoutError" || err.message === "Network request failed";
         if (isNetError) {
           netErrorObj.error = true;
-          netErrorObj.message = "Something went wrong";
+          netErrorObj.message = "No internet";
         }
         setBooksNetErrorObj(netErrorObj);
         setBooksError(true);
+        initNetErrorObj();
         setSearchedBooks([]);
         return storeBooks([]);
       })
@@ -119,6 +120,7 @@ const useSearchBooks = () => {
       })
       .finally(() => {
         setSearchedBooks([]);
+        setBooksError(false)
         setBooksReady(true);
       });
   };
