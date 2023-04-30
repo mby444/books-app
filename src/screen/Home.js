@@ -7,6 +7,7 @@ import Navbar from "../components/Navbar";
 import NavFooter from "../components/NavFooter";
 import BooksHome from "../components/BooksHome";
 import TimedOut from "../components/TimedOut";
+import UnknownError from "../components/UnknownError";
 
 function BooksRow({ books = [] }) {
   return (
@@ -47,7 +48,7 @@ function BooksRowContainer({ rowsCount = 0 }) {
   );
 }
 
-function DynamicBooksContainer({ isReady = false, errorObj = {} }) {
+function DynamicBooksContainer({ isReady = false, errorObj = {}, isUnknownError = false, }) {
   const { books } = useContext(BooksListContext);
   const rowsCount = Math.ceil(books.length / 3);
 
@@ -55,20 +56,26 @@ function DynamicBooksContainer({ isReady = false, errorObj = {} }) {
     <Loader />
   ) : errorObj.error ? (
     <TimedOut title={errorObj.message} />
+  ) : isUnknownError ? (
+    <UnknownError />
   ) : (
     <BooksRowContainer rowsCount={rowsCount} />
   );
 }
 
 export default function Home() {
-  const { books, booksReady, booksErrorObj, reloadBooks } = useHomeBooks();
+  const { books, booksReady, booksErrorObj, booksErrorUnknown, reloadBooks } = useHomeBooks();
 
   return (
     <View style={styles.container}>
       <Navbar title="MBY444 BOOKS" />
       <BooksListContext.Provider value={{ books }}>
         <BooksLoadActionContext.Provider value={{ load: reloadBooks }}>
-          <DynamicBooksContainer isReady={booksReady} errorObj={booksErrorObj} />
+          <DynamicBooksContainer
+            isReady={booksReady}
+            errorObj={booksErrorObj}
+            isUnknownError={booksErrorUnknown}
+          />
         </BooksLoadActionContext.Provider>
       </BooksListContext.Provider>
       <NavFooter position={0} />

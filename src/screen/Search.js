@@ -9,6 +9,7 @@ import BooksSearch from "../components/BooksSearch";
 import Empty from "../components/Empty";
 import NotFound from "../components/NotFound";
 import TimedOut from "../components/TimedOut";
+import UnknownError from "../components/UnknownError";
 
 function BooksContainer({ books = [] }) {
   return (
@@ -20,7 +21,13 @@ function BooksContainer({ books = [] }) {
   );
 }
 
-function DynamicBooksContainer({ books, isLoading, netErrorObj, isNotFoundError }) {
+function DynamicBooksContainer({
+  books,
+  isLoading,
+  netErrorObj,
+  isNotFoundError,
+  isUnknownError = false,
+}) {
   return (
     <>
       {isLoading ? (
@@ -29,6 +36,8 @@ function DynamicBooksContainer({ books, isLoading, netErrorObj, isNotFoundError 
         <TimedOut title={netErrorObj.message} />
       ) : isNotFoundError ? (
         <NotFound />
+      ) : isUnknownError ? (
+        <UnknownError />
       ) : !books.length ? (
         <Empty />
       ) : (
@@ -39,8 +48,16 @@ function DynamicBooksContainer({ books, isLoading, netErrorObj, isNotFoundError 
 }
 
 export default function Search() {
-  const { booksError, booksNetErrorObj, booksReady, completedBooks, searchBooks, clearBooks, reloadSearchedBooks } =
-    useSearchBooks();
+  const {
+    booksError,
+    booksNetErrorObj,
+    booksErrorUnknown,
+    booksReady,
+    completedBooks,
+    searchBooks,
+    clearBooks,
+    reloadSearchedBooks,
+  } = useSearchBooks();
   const [navFooterVisible, setNavFooterVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -71,6 +88,7 @@ export default function Search() {
           isLoading={isLoading}
           netErrorObj={booksNetErrorObj}
           isNotFoundError={booksError}
+          isUnknownError={booksErrorUnknown}
         />
       </BooksLoadActionContext.Provider>
       <NavFooter position={1} visible={navFooterVisible} />

@@ -7,6 +7,7 @@ const useHomeBooks = () => {
   const shelfInfo = getBookShelves();
   const [booksReady, setBooksReady] = useState(false);
   const [booksErrorObj, setBooksErrorObj] = useState({});
+  const [booksErrorUnknown, setBooksErrorUnknown] = useState(false);
   const [books, setBooks] = useState([]);
 
   const getAllBooks = async () => {
@@ -18,9 +19,18 @@ const useHomeBooks = () => {
       return items;
     } catch (err) {
       const errorObj = {
-        error: true,
-        message: "Something went wrong",
+        error: false,
+        message: "",
       };
+      const isNetError =
+        err.message === "RequestTimeoutError" ||
+        err.message === "Network request failed";
+      if (isNetError) {
+        errorObj.error = true;
+        errorObj.message = "No internet.";
+      } else {
+        setBooksErrorUnknown(true);
+      }
       setBooksErrorObj(errorObj);
       return [];
     }
@@ -28,6 +38,7 @@ const useHomeBooks = () => {
 
   const loadBooks = async () => {
     setBooksReady(false);
+    setBooksErrorUnknown(false);
     initBooksErrorObj();
     const booksData = await getAllBooks();
     setBooks(booksData);
@@ -53,6 +64,7 @@ const useHomeBooks = () => {
     books,
     booksReady,
     booksErrorObj,
+    booksErrorUnknown,
     reloadBooks,
   };
 };

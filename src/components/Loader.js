@@ -1,4 +1,4 @@
-import { Animated, Dimensions, StyleSheet, View } from "react-native";
+import { Animated, Dimensions, Easing, StyleSheet, View } from "react-native";
 import { useEffect, useRef } from "react";
 import loadingIcon from "../../assets/images/loading-icon.png";
 
@@ -11,9 +11,7 @@ function AnimatedLoader() {
     outputRange: ["0deg", "360deg"],
   });
   const rotateStyle = {
-    transform: [
-      { rotate: rotateValue },
-    ],
+    transform: [{ rotate: rotateValue }],
   };
 
   useEffect(() => {
@@ -21,6 +19,7 @@ function AnimatedLoader() {
       Animated.timing(rotateAnimate, {
         toValue: 1,
         duration: 1000,
+        easing: Easing.linear,
         useNativeDriver: true,
       })
     ).start();
@@ -46,7 +45,7 @@ const styles = StyleSheet.create({
     height: screenHeight - 2 * 64,
   },
   icon: {
-    width: 100,
-    height: 100,
-  }
+    width: 75,
+    height: 75,
+  },
 });

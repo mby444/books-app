@@ -5,6 +5,7 @@ const useBookDetail = (bookId = "") => {
   const [book, setBook] = useState({});
   const [bookReady, setBookReady] = useState(false);
   const [bookNetErrorObj, setBookNetErrorObj] = useState({});
+  const [bookErrorUnknown, setBookErrorUnknown] = useState(false);
 
   const getBookInfo = async () => {
     try {
@@ -19,10 +20,14 @@ const useBookDetail = (bookId = "") => {
         error: false,
         message: "",
       };
-      const isNetError = err.message === "RequestTimeoutError" || err.message === "Network request failed";
+      const isNetError =
+        err.message === "RequestTimeoutError" ||
+        err.message === "Network request failed";
       if (isNetError) {
         netErrorObj.error = true;
         netErrorObj.message = "No internet";
+      } else {
+        setBookErrorUnknown(true);
       }
       setBookNetErrorObj(netErrorObj);
       return {};
@@ -37,6 +42,8 @@ const useBookDetail = (bookId = "") => {
   };
 
   const loadBook = () => {
+    setBookReady(false);
+    setBookErrorUnknown(false);
     initBookNetErrorObj();
     getBookInfo().then((book) => {
       setBook(book);
@@ -45,7 +52,6 @@ const useBookDetail = (bookId = "") => {
   };
 
   const reloadBook = () => {
-    setBookReady(false);
     loadBook();
   };
 
@@ -58,6 +64,7 @@ const useBookDetail = (bookId = "") => {
     book,
     bookReady,
     bookNetErrorObj,
+    bookErrorUnknown,
     reloadBook,
   };
 };

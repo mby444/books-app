@@ -17,6 +17,7 @@ const useSearchBooks = () => {
   const [completedBooks, setCompletedBooks] = useState([]);
   const [booksError, setBooksError] = useState(false);
   const [booksNetErrorObj, setBooksNetErrorObj] = useState({});
+  const [booksErrorUnknown, setBooksErrorUnknown] = useState(false);
   const [booksReady, setBooksReady] = useState(false);
 
   useEffect(() => {
@@ -41,7 +42,7 @@ const useSearchBooks = () => {
   };
 
   const getPastSearchQuery = async () => {
-    const text = await getStorageData(searchQueryKey) || "";
+    const text = (await getStorageData(searchQueryKey)) || "";
     return text?.trim();
   };
 
@@ -75,6 +76,7 @@ const useSearchBooks = () => {
 
   const searchBooks = (searchQuery) => {
     setBooksReady(false);
+    setBooksErrorUnknown(false);
     initNetErrorObj();
     storeSearchQuery(searchQuery);
     timedFetch(
@@ -93,10 +95,14 @@ const useSearchBooks = () => {
           error: false,
           message: "",
         };
-        const isNetError = err.message === "RequestTimeoutError" || err.message === "Network request failed";
+        const isNetError =
+          err.message === "RequestTimeoutError" ||
+          err.message === "Network request failed";
         if (isNetError) {
           netErrorObj.error = true;
           netErrorObj.message = "No internet";
+        } else {
+          setBooksErrorUnknown(true);
         }
         setBooksNetErrorObj(netErrorObj);
         setBooksError(true);
@@ -120,15 +126,14 @@ const useSearchBooks = () => {
       })
       .finally(() => {
         setSearchedBooks([]);
-        setBooksError(false)
+        setBooksError(false);
         setBooksReady(true);
       });
   };
 
   const reloadSearchedBooks = () => {
     setBooksReady(false);
-    getPastSearchQuery()
-    .then((text) => {
+    getPastSearchQuery().then((text) => {
       searchBooks(text);
     });
   };
@@ -136,6 +141,7 @@ const useSearchBooks = () => {
   return {
     booksError,
     booksNetErrorObj,
+    booksErrorUnknown,
     booksReady,
     searchedBooks,
     completedBooks,

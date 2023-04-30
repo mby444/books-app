@@ -1,4 +1,11 @@
-import { Dimensions, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { useContext } from "react";
 import { BooksLoadActionContext } from "../context";
 import towerIcon from "../../assets/images/tower-icon.png";
@@ -33,8 +40,8 @@ const styles = StyleSheet.create({
     paddingBottom: 6,
   },
   icon: {
-    width: 100,
-    height: 100,
+    width: 75,
+    height: 75,
   },
   textContainer: {
     paddingBottom: 6,
