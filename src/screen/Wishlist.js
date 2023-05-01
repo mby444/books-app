@@ -12,6 +12,7 @@ import Navbar from "../components/Navbar";
 import Loader from "../components/Loader";
 import Empty from "../components/Empty";
 import BookWishlist from "../components/BookWishlist";
+import BannerAdmob from "../components/BannerAdmob";
 
 function BooksContainer({ books = [] }) {
   return (
@@ -94,6 +95,7 @@ export default function Wishlist() {
           isLoading={!bookWishlistReady}
         />
       </WishlistActionContext.Provider>
+      <BannerAdmob />
     </View>
   );
 }
@@ -104,6 +106,6 @@ const styles = StyleSheet.create({
   },
   booksContainer: {
     paddingVertical: 16,
-    marginBottom: 64 + 8,
+    // backgroundColor: "#222",
   },
 });

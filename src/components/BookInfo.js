@@ -12,6 +12,7 @@ import {
 import { BookContext, BookWishlistContext } from "../context";
 import { setStorageData } from "../utils/storage";
 import { decodeHTMLEntities, http2https } from "../utils/string-formatter";
+import BannerAdmob from "./BannerAdmob";
 import emptyBookImage from "../../assets/images/empty-book.png";
 import bookmarkIcon from "../../assets/images/bookmark-blue-icon-2.png";
 import bookmarkCheckedIcon from "../../assets/images/bookmark-checked-blue-icon-2.png";
@@ -287,17 +288,26 @@ export default function BookInfo() {
       <View style={styles.dateContainer}>
         <Text style={styles.date}>{publishedDate}</Text>
       </View>
+      <View style={[styles.adContainer]}>
+        <BannerAdmob />
+      </View>
       <View style={styles.buyButtonContainer}>
         <BuyButton buyLink={buyLink} priceText={priceText} />
       </View>
       <View style={styles.saveButtonContainer}>
         <SaveButton bookId={id} />
       </View>
+      <View style={[styles.adContainer]}>
+        <BannerAdmob />
+      </View>
       <View style={styles.aboutTitleContainer}>
         <Text style={styles.aboutTitle}>About this book</Text>
       </View>
       <View style={styles.aboutTextContainer}>
         <Text style={styles.aboutText}>{description}</Text>
+      </View>
+      <View style={[styles.adContainer, { paddingBottom: 0 }]}>
+        <BannerAdmob />
       </View>
     </View>
   );
@@ -312,7 +322,7 @@ const styles = StyleSheet.create({
     height: (screenWidth * 0.75 * 409.15) / 280,
   },
   titleContainer: {
-    paddingTop: 72,
+    paddingTop: 36,
     paddingBottom: 36,
     paddingHorizontal: 26,
   },
@@ -332,7 +342,7 @@ const styles = StyleSheet.create({
   },
   dateContainer: {
     paddingHorizontal: 26,
-    paddingBottom: 46,
+    paddingBottom: 26,
   },
   date: {
     fontSize: 16,
@@ -341,6 +351,7 @@ const styles = StyleSheet.create({
   },
   buyButtonContainer: {
     paddingHorizontal: 26,
+    paddingTop:  20,
     paddingBottom: 20,
   },
   buyButton: {
@@ -360,7 +371,7 @@ const styles = StyleSheet.create({
   },
   saveButtonContainer: {
     paddingHorizontal: 26,
-    paddingBottom: 46,
+    paddingBottom: 26,
   },
   saveButton: {
     width: "100%",
@@ -383,7 +394,7 @@ const styles = StyleSheet.create({
   },
   unsaveButtonContainer: {
     paddingHorizontal: 26,
-    paddingBottom: 46,
+    paddingBottom: 26,
   },
   unsaveButton: {
     width: "100%",
@@ -406,6 +417,7 @@ const styles = StyleSheet.create({
   },
   aboutTitleContainer: {
     paddingHorizontal: 26,
+    paddingTop: 16,
     paddingBottom: 16,
   },
   aboutTitle: {
@@ -420,4 +432,7 @@ const styles = StyleSheet.create({
   aboutText: {
     color: "#222",
   },
+  adContainer: {
+    paddingVertical: 16,
+  }
 });

@@ -1,4 +1,7 @@
 {
   "name": "Books",
-  "displayName": "Books"
+  "displayName": "Books",
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-5668465138627040~3966275870"
+  }
 }
