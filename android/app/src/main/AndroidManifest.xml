@@ -10,9 +10,6 @@
       android:allowBackup="false"
       android:theme="@style/AppTheme">
       <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-5668465138627040~3966275870"/>
-      <meta-data
           android:name="com.google.android.gms.ads.APPLICATION_ID"
           android:value="ca-app-pub-5668465138627040~3966275870"/>
       <activity

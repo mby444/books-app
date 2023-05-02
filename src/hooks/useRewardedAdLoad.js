@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
-import { RewardedAd, RewardedAdEventType } from "react-native-google-mobile-ads";
-import { interstitialUnitId } from "../../config/admob.json";
-import { adIntersitialId, rewardedAd } from "../utils/admob";
+import { RewardedAdEventType } from "react-native-google-mobile-ads";
+import { rewardedAd } from "../utils/admob";
 
-const useRewardedAdLoad = () => {
+const useRewardedAdLoad = (options = { instant: true }) => {
     const [loaded, setLoaded] = useState(false);
+    const [reward, setReward] = useState({});
 
     useEffect(() => {
         const unsubscribeLoaded = rewardedAd.addAdEventListener(RewardedAdEventType.LOADED, () => {
             setLoaded(true);
         });
         const unsubscribeEarned = rewardedAd.addAdEventListener(RewardedAdEventType.EARNED_REWARD,  (reward) => {
+            setReward(reward);
             console.log(reward);
         });
         rewardedAd.load();
@@ -21,9 +22,15 @@ const useRewardedAdLoad = () => {
         };
     }, []);
 
+    useEffect(() => {
+        if (options?.instant && loaded) rewardedAd.show();
+        console.log(loaded);
+    }, [loaded]);
+
     return {
         rewardedAd,
         loaded,
+        reward,
     };
 };
 

@@ -1,6 +1,7 @@
 import { ScrollView, StyleSheet, View } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import useBookDetail from "../hooks/useBookDetail";
+import useRewardedAdLoad from "../hooks/useRewardedAdLoad";
 import useBookWishlist from "../hooks/useBookWishlist";
 import {
   BookContext,
@@ -32,6 +33,7 @@ export default function Book() {
   const { book, bookReady, bookNetErrorObj, bookErrorUnknown, reloadBook } =
     useBookDetail(bookId);
   const { bookWishlist, bookWishlistReady } = useBookWishlist();
+  const {} = useRewardedAdLoad();
   const allDataReady = bookReady && bookWishlistReady;
 
   return (

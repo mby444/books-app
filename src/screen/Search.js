@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { BooksLoadActionContext } from "../context";
 import useSearchBooks from "../hooks/useSearchBooks";
 import useRewardedAdLoad from "../hooks/useRewardedAdLoad";
+import useAppOpenAdLoad from "../hooks/useAppOpenAdLoad";
+import useInterstitialAdLoad from "../hooks/useInterstitialAdLoad";
 import Loader from "../components/Loader";
 import NavbarSearch from "../components/NavbarSearch";
 import NavFooter from "../components/NavFooter";
@@ -61,15 +63,13 @@ export default function Search() {
   } = useSearchBooks();
   const [navFooterVisible, setNavFooterVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
-  const { rewardedAd, loaded: adLoaded } = useRewardedAdLoad();
+  // const { loaded: adLoaded } = useRewardedAdLoad();
+  const {} = useAppOpenAdLoad();
+  // const {} = useInterstitialAdLoad();
 
   useEffect(() => {
     setIsLoading(!booksReady);
   }, [booksReady]);
-
-  useEffect(() => {
-    if (adLoaded) rewardedAd.show();
-  }, [adLoaded]);
 
   const handleSearch = (value) => {
     setIsLoading(true);
