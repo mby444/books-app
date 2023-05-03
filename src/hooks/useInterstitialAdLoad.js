@@ -4,26 +4,49 @@ import { interstitialAd } from "../utils/admob";
 
 const useInterstitialAdLoad = (options = { instant: true }) => {
     const [loaded, setLoaded] = useState(false);
+    const [isClosed, setIsClosed] = useState(false);
+
+    const showAd = async () => {
+        try {
+            await interstitialAd.show();
+        } catch (err) {
+            console.log(err);
+            setIsClosed(true);
+        }
+    };
+
+    const reloadAd = () => {
+        setLoaded(false);
+        setIsClosed(false);
+        interstitialAd.load();
+    };
 
     useEffect(() => {
-        const unsubscribe = interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
+        const unsubscribeLoaded = interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
             setLoaded(true);
-            console.log("loaded");
+        });
+        const unsubscribeClosed = interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
+            setIsClosed(true);
         });
 
+        interstitialAd.load();
+
         return () => {
-            unsubscribe();
+            unsubscribeLoaded();
+            unsubscribeClosed();
         };
     }, []);
 
     useEffect(() => {
-        if (options?.instant && loaded) interstitialAd.show();
+        if (options?.instant && loaded) showAd();
         console.log(loaded);
     }, [loaded]);
 
     return {
         interstitialAd,
         loaded,
+        isClosed,
+        reloadAd,
     };
 };
 

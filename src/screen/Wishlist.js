@@ -8,6 +8,7 @@ import {
 } from "../context";
 import { getStorageData, setStorageData } from "../utils/storage";
 import useBookWishlist from "../hooks/useBookWishlist";
+import useInterstitialAdLoad from "../hooks/useInterstitialAdLoad";
 import Navbar from "../components/Navbar";
 import Loader from "../components/Loader";
 import Empty from "../components/Empty";
@@ -45,7 +46,9 @@ function DynamicBooksContainer({ books, isLoading }) {
 export default function Wishlist() {
   const { bookWishlist, bookWishlistReady, reloadBookWishlist } =
     useBookWishlist();
+  const { isClosed: adIsClosed, reloadAd } = useInterstitialAdLoad();
   const storageKey = "@book_wishlist";
+  const isLoading = !(bookWishlistReady && adIsClosed);
 
   const saveBookWishlist = async (data) => {
     const jsonData = JSON.stringify(data);
@@ -81,6 +84,7 @@ export default function Wishlist() {
   useFocusEffect(
     useCallback(() => {
       reloadBookWishlist();
+      reloadAd();
     }, [])
   );
 
@@ -92,7 +96,7 @@ export default function Wishlist() {
       >
         <DynamicBooksContainer
           books={bookWishlist}
-          isLoading={!bookWishlistReady}
+          isLoading={isLoading}
         />
       </WishlistActionContext.Provider>
       <BannerAdmob />

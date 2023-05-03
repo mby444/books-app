@@ -64,12 +64,12 @@ export default function Search() {
   const [navFooterVisible, setNavFooterVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   // const { loaded: adLoaded } = useRewardedAdLoad();
-  const {} = useAppOpenAdLoad();
+  const { isClosed: adIsClosed } = useAppOpenAdLoad();
   // const {} = useInterstitialAdLoad();
 
   useEffect(() => {
-    setIsLoading(!booksReady);
-  }, [booksReady]);
+    setIsLoading(!(booksReady && adIsClosed));
+  }, [booksReady, adIsClosed]);
 
   const handleSearch = (value) => {
     setIsLoading(true);

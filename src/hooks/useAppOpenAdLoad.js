@@ -1,34 +1,44 @@
 import { useEffect, useState } from "react";
+import { AdEventType } from "react-native-google-mobile-ads";
 import { appOpenAd } from "../utils/admob";
 
 const useAppOpenAdLoad = (options = { instant: true }) => {
     const [loaded, setLoaded] = useState(false);
+    const [isClosed, setIsClosed] = useState(false);
 
-    const loadAd = () => {
+    const showAd = async () => {
         try {
-            appOpenAd.load();
-            setLoaded(appOpenAd.loaded);
+            appOpenAd.show();
         } catch (err) {
             console.log(err);
-            setLoaded(false);
+            setIsClosed(true);
         }
     };
 
-    const displayAd = () => {
-        appOpenAd.show();
-    };
-
     useEffect(() => {
-        loadAd();
+        const unsubscribeLoaded = appOpenAd.addAdEventListener(AdEventType.LOADED, () => {
+            setLoaded(true);
+        });
+        const unsubscribeClosed = appOpenAd.addAdEventListener(AdEventType.CLOSED, () => {
+            setIsClosed(true);
+        });
+
+        appOpenAd.load();
+
+        return () => {
+            unsubscribeLoaded();
+            unsubscribeClosed();
+        };
     }, []);
 
     useEffect(() => {
-        if (options?.instant && loaded) displayAd();
+        if (options?.instant && loaded) showAd();
     }, [loaded]);
 
     return {
         appOpenAd,
         loaded,
+        isClosed,
     };
 };
 

@@ -1,7 +1,7 @@
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import useBookDetail from "../hooks/useBookDetail";
-import useRewardedAdLoad from "../hooks/useRewardedAdLoad";
+import useInterstitialAdLoad from "../hooks/useInterstitialAdLoad";
 import useBookWishlist from "../hooks/useBookWishlist";
 import {
   BookContext,
@@ -13,6 +13,7 @@ import NavbarBook from "../components/NavbarBook";
 import BookInfo from "../components/BookInfo";
 import TimedOut from "../components/TimedOut";
 import UnknownError from "../components/UnknownError";
+import { isCallChain } from "typescript";
 
 function DynamicMainContainer({ isReady = false, netErrorObj = {}, isUnknownError = false }) {
   return !isReady ? (
@@ -33,8 +34,8 @@ export default function Book() {
   const { book, bookReady, bookNetErrorObj, bookErrorUnknown, reloadBook } =
     useBookDetail(bookId);
   const { bookWishlist, bookWishlistReady } = useBookWishlist();
-  const {} = useRewardedAdLoad();
-  const allDataReady = bookReady && bookWishlistReady;
+  const { isClosed: adIsClosed } = useInterstitialAdLoad();
+  const allDataReady = bookReady && bookWishlistReady && adIsClosed;
 
   return (
     <ScrollView style={styles.container}>
